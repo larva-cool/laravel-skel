@@ -36,6 +36,7 @@ RUN docker-php-ext-install -j$(nproc) \
         exif \
         gd \
         gettext \
+        intl \
         gmp \
         mysqli \
         pcntl \
