@@ -30,9 +30,22 @@ RUN apt-get update && \
 
 # 安装 PHP 扩展
 RUN docker-php-ext-install -j$(nproc) \
+        bcmath \
+        bz2 \
+        calendar \
+        exif \
+        gd \
+        gettext \
+        gmp \
+        mysqli \
+        pcntl \
         pdo_mysql \
+        sockets \
         zip \
         mbstring \
+        sysvmsg \
+        sysvsem \
+        sysvshm \
         xml \
         curl \
         opcache
