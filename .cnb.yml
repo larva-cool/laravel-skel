@@ -1,0 +1,58 @@
+$:
+  # vscode 事件：专供页面中启动远程开发用
+  vscode:
+    - docker:
+        # 自定义开发环境
+        build:
+          # 指定构建镜像的 Dockerfile 文件
+          dockerfile: .ide/Dockerfile
+          # 用来声明缓存构建过程中依赖的文件列表。
+          # 注意：如果构建过程有用到其他文件，也需要在此处声明
+          # 参考文档：https://docs.cnb.cool/zh/grammar/pipeline.html#build
+          by:
+            - .ide/settings.json
+      services:
+        # 声明使用 vscode 服务
+        - vscode
+        # 声明在容器中支持 docker 命令
+        - docker
+      stages:
+        # 环境启动后需要执行的命令
+        - name: ls
+          script: ls -al
+  # 推送标签时需要执行的命令
+  tag_push:
+    - services:
+        - docker
+      docker:
+        volumes:
+          - /data/codewiki/${CNB_REPO_SLUG}:data
+      stages:
+        - name: 生成 Code Wiki
+          # 当仓库比较大时，codewiki 用时会超过流水线默认的1小时，导致流水线自动结束。所以手动指定流水线超时时间
+          timeout: 2h
+          image: cnbcool/codewiki:latest
+          settings:
+            git_doc_dir: /data/codewiki/${CNB_REPO_SLUG}
+  # 推送代码时需要执行的命令
+  push:
+    - imports:
+        # 引用密钥仓库中的特定文件
+        - https://cnb.cool/larva-cool/secret/-/blob/main/git.yml
+      stages:
+        - name: sync to github
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/larva-cool/laravel-skel.git
+            auth_type: https
+            username: ${GITHUB_USERNAME}
+            password: ${GITHUB_ACCESS_TOKEN}
+            push_tags: true
+        - name: sync to codeup
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://codeup.aliyun.com/xutongle/larva-cool/laravel-skel.git
+            auth_type: https
+            username: ${CODEUP_USERNAME}
+            password: ${CODEUP_PASSWORD}
+            push_tags: true
