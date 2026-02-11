@@ -36,17 +36,9 @@ RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.cloud.tencent.com@g' /etc/apt/sou
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && setcap "cap_net_bind_service=+ep" /usr/bin/php8.4 \
-    && cat > /etc/php/8.4/cli/conf.d/99-php.ini << EOF
-[PHP]
-post_max_size = 100M
-upload_max_filesize = 100M
-variables_order = EGPCS
+    && setcap "cap_net_bind_service=+ep" /usr/bin/php8.4
 
-date.timezone = Asia/Shanghai
-opcache.enable_cli = 'On'
-swoole.use_shortname='Off'
-EOF
+RUN echo -e "[PHP]\npost_max_size = 100M\nupload_max_filesize = 100M\nvariables_order = EGPCS\n\ndate.timezone = Asia/Shanghai\nopcache.enable_cli = 'On'\nswoole.use_shortname='Off'" > /etc/php/8.4/cli/conf.d/99-php.ini
 
 # 安装 Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
