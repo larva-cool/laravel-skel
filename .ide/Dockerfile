@@ -37,7 +37,7 @@ RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.cloud.tencent.com@g' /etc/apt/sou
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && setcap "cap_net_bind_service=+ep" /usr/bin/php8.4 \
-    echo "[PHP]
+    && echo "[PHP]
 post_max_size = 100M
 upload_max_filesize = 100M
 variables_order = EGPCS
