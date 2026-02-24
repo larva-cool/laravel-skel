@@ -9,6 +9,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * 应用服务
+ *
+ * @author Tongle Xu <xutongle@msn.com>
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -16,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // 注册系统设置服务
+        $this->app->singleton(\App\Services\SettingManagerService::class, function () {
+            return new \App\Services\SettingManagerService;
+        });
         //
     }
 
@@ -24,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Carbon::setLocale('zh');
+        \Illuminate\Http\Resources\Json\JsonResource::withoutWrapping();
+        \Illuminate\Database\Eloquent\Model::shouldBeStrict(! $this->app->isProduction());
+        \Illuminate\Database\Eloquent\Relations\Relation::enforceMorphMap(config('morph_maps'));
     }
 }
