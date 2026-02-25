@@ -2,11 +2,7 @@ FROM alpine:3.22
 
 LABEL maintainer="Tongle Xu <xutongle@msn.com>" version="1.0" license="MIT"
 
-# 更新系统
-RUN set -ex \
-    && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
-    && apk update \
-    && apk add --no-cache openssh_server curl
+
 
 # 安装 code-server 和 PHP 开发扩展
 RUN curl -fsSL https://code-server.dev/install.sh | sh \
