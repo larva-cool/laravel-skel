@@ -9,14 +9,34 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enum\SocialProvider;
 use App\Enum\UserStatus;
+use App\Models\User\Address;
+use App\Models\User\LoginHistory;
+use App\Models\User\UserExtra;
+use App\Models\User\UserGroup;
+use App\Models\User\UserProfile;
+use App\Models\User\UserSocial;
+use App\Observers\UserObserver;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * 用户模型
@@ -47,14 +67,30 @@ use Illuminate\Support\Carbon;
  * @property-read string $status_label 状态文本
  * @property-read string $invite_link 邀请链接
  *
+ * 关系对象
+ * @property UserGroup $group 用户组
+ * @property UserProfile $profile 个人信息
+ * @property UserExtra $extra 用户扩展信息
+ * @property Collection<int,UserSocial> $socials 用户社交账号
+ * @property UserSocial|null $wechatMp 微信公众号
+ * @property UserSocial|null $wechatApp 微信应用
+ * @property UserSocial|null $wechatMiniProgram 微信小程序
+ * @property Collection<int,LoginHistory> $loginHistories 登录历史
+ * @property \Illuminate\Database\Eloquent\Collection<int,User> $invites 邀请用户
+ *
+ * @method Builder active() 查询活动用户
+ * @method Builder keyword(string $keyword) 根据关键词搜索
+ *
  * @author Tongle Xu <xutongle@gmail.com>
  */
+#[ObservedBy([UserObserver::class])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
     use Traits\DateTimeFormatter;
+    use Traits\HasApiTokens;
     use Traits\MultiFieldAggregate;
 
     // 默认头像
@@ -245,7 +281,6 @@ class User extends Authenticatable
         return $this->socials()->one()->where('provider', SocialProvider::WECHAT_MINI_PROGRAM->value);
     }
 
-
     /**
      * Get the address relation.
      */
@@ -269,7 +304,6 @@ class User extends Authenticatable
     {
         return $this->morphMany(LoginHistory::class, 'user')->latest('login_at');
     }
-
 
     /**
      * 查询活的用户
