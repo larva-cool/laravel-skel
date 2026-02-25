@@ -53,7 +53,7 @@ RUN apt-get install -y php8.4-cli php8.4-dev \
         && apt-get update \
         && apt-get -y autoremove \
         && apt-get clean \
-        && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+        && rm -rf /var/lib/apt/lists/*
 
 # 安装 Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
