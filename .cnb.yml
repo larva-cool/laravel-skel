@@ -6,6 +6,11 @@ $:
         build:
           # 指定构建镜像的 Dockerfile 文件
           dockerfile: .ide/Dockerfile
+          # 用来声明缓存构建过程中依赖的文件列表。
+          # 注意：如果构建过程有用到其他文件，也需要在此处声明
+          # 参考文档：https://docs.cnb.cool/zh/grammar/pipeline.html#build
+          by:
+            - .ide/php.ini
       services:
         # 声明使用 vscode 服务
         - vscode

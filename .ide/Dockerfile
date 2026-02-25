@@ -16,11 +16,12 @@ RUN sed -i 's@//.*archive.ubuntu.com@//mirrors.aliyun.com@g' /etc/apt/sources.li
 # 安装开发工具和依赖
 RUN apt-get update && \
     apt-get install -y \
-            build-essential \
+            build-essential software-properties-common \
             cmake clang llvm-dev libclang-dev \
             git curl \
             wget zip unzip lsof nload htop net-tools dnsutils openssh-server vim \
-            # PHP 相关依赖
+            # PHP 相关依赖 \
+            mysql-client \
             libzip-dev \
             libpng-dev \
             libjpeg-dev \
@@ -40,10 +41,24 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # 安装 PHP 和扩展
-
+RUN apt-get install -y php8.4-cli php8.4-dev \
+           php8.4-pgsql php8.4-sqlite3 php8.4-gd php8.4-imagick \
+           php8.4-curl php8.4-mongodb \
+           php8.4-imap php8.4-mysql php8.4-mbstring \
+           php8.4-xml php8.4-zip php8.4-bcmath php8.4-soap \
+           php8.4-intl php8.4-readline \
+           php8.4-ldap \
+           php8.4-msgpack php8.4-igbinary php8.4-redis php8.4-swoole \
+           php8.4-memcached \
+        && apt-get update \
+        && apt-get -y autoremove \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # 安装 Composer
-# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+COPY .ide/php.ini /etc/php/8.4/cli/conf.d/99-php.ini
 
 # 安装 code-server 和 PHP 开发扩展
 RUN curl -fsSL https://code-server.dev/install.sh | sh \
