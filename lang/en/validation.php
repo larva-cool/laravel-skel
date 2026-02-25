@@ -176,6 +176,14 @@ return [
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
     |--------------------------------------------------------------------------
+    */
+    'username' => 'The :attribute field format is invalid.',
+    'phone' => 'The :attribute field format is invalid.',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Language Lines
+    |--------------------------------------------------------------------------
     |
     | Here you may specify custom validation messages for attributes using the
     | convention "attribute.rule" to name the lines. This makes it quick to
@@ -186,6 +194,16 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
+        ],
+        'source_type' => [
+            'incorrect' => 'The :attribute is incorrect.',
+        ],
+        'username' => [
+            'change_count' => 'The :attribute has been changed more than the allowed number of times.',
+            'username' => 'The :attribute format is incorrect, please re-enter.',
+        ],
+        'verify_code' => [
+            'required' => 'The :attribute is required.',
         ],
     ],
 
@@ -200,6 +218,20 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'account' => 'Account',
+        'area_code' => 'Area Code',
+        'avatar' => 'Avatar',
+        'city_code' => 'City Code',
+        'count' => 'Count',
+        'email' => 'Email',
+        'gender' => 'Gender',
+        'invite_code' => 'Invite Code',
+        'password' => 'Password',
+        'phone' => 'Phone',
+        'user_id' => 'User ID',
+        'username' => 'Username',
+        'verify_code' => 'Verify Code',
+    ],
 
 ];
