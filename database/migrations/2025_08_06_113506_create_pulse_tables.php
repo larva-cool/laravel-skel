@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * This is NOT a freeware, use is subject to license terms.
+ */
+
+declare(strict_types=1);
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Pulse\Support\PulseMigration;
@@ -65,10 +71,10 @@ return new class extends PulseMigration
             $table->decimal('value', 20, 2);
             $table->unsignedInteger('count')->nullable();
 
-            $table->unique(['bucket', 'period', 'type', 'aggregate', 'key_hash']); // Force "on duplicate update"...
+            $table->unique(['bucket', 'period', 'type', 'aggregate', 'key_hash'], 'bptak'); // Force "on duplicate update"...
             $table->index(['period', 'bucket']); // For trimming...
             $table->index('type'); // For purging...
-            $table->index(['period', 'type', 'aggregate', 'bucket']); // For aggregate queries...
+            $table->index(['period', 'type', 'aggregate', 'bucket'], 'ptab'); // For aggregate queries...
         });
     }
 

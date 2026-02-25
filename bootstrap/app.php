@@ -15,17 +15,25 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
+        channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
         // $middleware->authenticateSessions();
         // $middleware->throttleWithRedis();
-        //
-        // Configure the CSRF token validation middleware.
-        // $middleware->validateCsrfTokens([
-        //     //
+        $middleware->alias([
+            'abilities' => Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+            'ability' => Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+        ]);
+        // $middleware->web(append: [
         // ]);
+        // $middleware->api(prepend: [
+        // ]);
+        // Configure the CSRF token validation middleware.
+        $middleware->validateCsrfTokens([
+            '/api/*',
+        ]);
         // Configure the cookie encryption middleware.
         // $middleware->encryptCookies([
         //     //

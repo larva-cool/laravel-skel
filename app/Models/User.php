@@ -11,6 +11,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enum\SocialProvider;
 use App\Enum\UserStatus;
+use App\Models\Coin\CoinTrade;
+use App\Models\Point\PointTrade;
 use App\Models\User\Address;
 use App\Models\User\LoginHistory;
 use App\Models\User\UserExtra;
@@ -75,6 +77,8 @@ use Illuminate\Support\Facades\Storage;
  * @property UserSocial|null $wechatMp 微信公众号
  * @property UserSocial|null $wechatApp 微信应用
  * @property UserSocial|null $wechatMiniProgram 微信小程序
+ * @property Collection<int,PointTrade> $points 积分交易明细
+ * @property Collection<int,CoinTrade> $coins 金币交易明细
  * @property Collection<int,LoginHistory> $loginHistories 登录历史
  * @property \Illuminate\Database\Eloquent\Collection<int,User> $invites 邀请用户
  *
@@ -282,6 +286,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the point trades relation.
+     */
+    public function points(): HasMany
+    {
+        return $this->hasMany(PointTrade::class)->latest('id');
+    }
+
+    /**
+     * Get the coin trades relation.
+     */
+    public function coins(): HasMany
+    {
+        return $this->hasMany(CoinTrade::class)->latest('id');
+    }
+
+    /**
      * Get the address relation.
      */
     public function addresses(): HasMany
@@ -303,6 +323,14 @@ class User extends Authenticatable
     public function loginHistories(): MorphMany
     {
         return $this->morphMany(LoginHistory::class, 'user')->latest('login_at');
+    }
+
+    /**
+     * Get the invite's relation.
+     */
+    public function invites(): HasManyThrough|User
+    {
+        return $this->hasManyThrough(User::class, UserExtra::class, 'referrer_id', 'id', 'id', 'user_id');
     }
 
     /**
