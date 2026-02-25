@@ -65,12 +65,12 @@ COPY .ide/php.ini /etc/php/8.4/cli/conf.d/99-php.ini
 # 安装 code-server 和 PHP 开发扩展
 RUN curl -fsSL https://code-server.dev/install.sh | sh \
     && code-server --install-extension bmewburn.vscode-intelephense-client \
-    && code-server --install-extension xdebug.php-debug \
     && code-server --install-extension formulahendry.code-runner \
     && code-server --install-extension ms-vscode.vscode-typescript-next \
     && code-server --install-extension esbenp.prettier-vscode \
     && code-server --install-extension tencent-cloud.coding-copilot \
-    && code-server --install-extension zobo.php-intellisense
+    && code-server --install-extension zobo.php-intellisense \
+    && code-server --install-extension laravel.vscode-laravel
 
 # 指定字符集支持命令行输入中文
 ENV LANG C.UTF-8
