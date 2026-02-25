@@ -188,4 +188,364 @@ class User extends Authenticatable
             get: fn () => $this->status->label()
         )->shouldCache();
     }
+
+    /**
+     * Get the group relation.
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class);
+    }
+
+    /**
+     * Get the profile relation.
+     */
+    public function profile(): HasOne
+    {
+        return $this->hasOne(UserProfile::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the extra relation.
+     */
+    public function extra(): HasOne
+    {
+        return $this->hasOne(UserExtra::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the socials' relation.
+     */
+    public function socials(): HasMany
+    {
+        return $this->hasMany(UserSocial::class)->orderBy('id');
+    }
+
+    /**
+     * Get the wechat mp relation.
+     */
+    public function wechatMp(): HasOne
+    {
+        return $this->socials()->one()->where('provider', SocialProvider::WECHAT_MP->value);
+    }
+
+    /**
+     * Get the wechat app relation.
+     */
+    public function wechatApp(): HasOne
+    {
+        return $this->socials()->one()->where('provider', SocialProvider::WECHAT_APP->value);
+    }
+
+    /**
+     * Get the wechat mini program relation.
+     */
+    public function wechatMiniProgram(): HasOne
+    {
+        return $this->socials()->one()->where('provider', SocialProvider::WECHAT_MINI_PROGRAM->value);
+    }
+
+
+    /**
+     * Get the address relation.
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class)->orderBy('id');
+    }
+
+    /**
+     * Get the default address relation.
+     */
+    public function defaultAddress(): HasOne
+    {
+        return $this->addresses()->one()->where('is_default', true)->latestOfMany();
+    }
+
+    /**
+     * Get the login histories relation.
+     */
+    public function loginHistories(): MorphMany
+    {
+        return $this->morphMany(LoginHistory::class, 'user')->latest('login_at');
+    }
+
+
+    /**
+     * 查询活的用户
+     */
+    protected function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', '=', UserStatus::STATUS_ACTIVE->value);
+    }
+
+    /**
+     * 根据关键词搜索
+     */
+    protected function scopeKeyword(Builder $query, string $keyword): Builder
+    {
+        return $query->where(function (Builder $query) use ($keyword) {
+            $query->where('username', 'like', '%'.$keyword.'%')
+                ->orWhere('name', 'like', '%'.$keyword.'%')
+                ->orWhere('email', 'like', '%'.$keyword.'%')
+                ->orWhere('phone', 'like', '%'.$keyword.'%');
+        });
+    }
+
+    /**
+     * 获取手机号
+     *
+     * @param  \Illuminate\Notifications\Notification|null  $notification
+     */
+    public function routeNotificationForPhone($notification): ?string
+    {
+        return $this->phone ?: null;
+    }
+
+    /**
+     * 获取微信 Openid
+     *
+     * @param  \Illuminate\Notifications\Notification|null  $notification
+     */
+    public function routeNotificationForWechat($notification): ?string
+    {
+        $this->loadMissing('wechatMp');
+
+        return ! empty($this->wechatMp->openid) ? $this->wechatMp->openid : null;
+    }
+
+    /**
+     * 获取微信小程序 Openid
+     *
+     * @param  \Illuminate\Notifications\Notification|null  $notification
+     */
+    public function routeNotificationForWechatMini($notification): ?string
+    {
+        $this->loadMissing('wechatMiniProgram');
+
+        return ! empty($this->wechatMiniProgram->openid) ? $this->wechatMiniProgram->openid : null;
+    }
+
+    /**
+     * 是否有头像
+     */
+    public function hasAvatar(): bool
+    {
+        return ! empty($this->getRawOriginal('avatar'));
+    }
+
+    /**
+     * 是否有密码
+     */
+    public function hasPassword(): bool
+    {
+        return ! empty($this->password);
+    }
+
+    /**
+     * Determine if the user has verified their phone number.
+     */
+    public function hasVerifiedPhone(): bool
+    {
+        $this->loadMissing('extra');
+
+        return ! is_null($this->extra->phone_verified_at);
+    }
+
+    /**
+     * Determine if the user has verified their email address.
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        $this->loadMissing('extra');
+
+        return ! is_null($this->extra->email_verified_at);
+    }
+
+    /**
+     * 增加 Vip 天数
+     */
+    public function addVipDays(int|string $days): bool
+    {
+        if ($this->vip_expiry_at) {
+            $this->vip_expiry_at = $this->vip_expiry_at->addDays($days);
+        } else {
+            $this->vip_expiry_at = Carbon::now()->addDays((int) $days);
+        }
+
+        return $this->saveQuietly();
+    }
+
+    /**
+     * Mark the given user's phone as verified.
+     */
+    public function markPhoneAsVerified(): bool
+    {
+        $this->loadMissing('extra');
+        $status = $this->extra->forceFill(['phone_verified_at' => $this->freshTimestamp()])->saveQuietly();
+        Event::dispatch(new \App\Events\User\PhoneVerified($this));
+
+        return $status;
+    }
+
+    /**
+     * Mark the given user's email as verified.
+     */
+    public function markEmailAsVerified(): bool
+    {
+        $this->loadMissing('extra');
+        $status = $this->extra->forceFill(['email_verified_at' => $this->freshTimestamp()])->saveQuietly();
+        Event::dispatch(new \App\Events\User\EmailVerified($this));
+
+        return $status;
+    }
+
+    /**
+     * Mark the given user's active.
+     */
+    public function markActive(): bool
+    {
+        return $this->updateQuietly(['status' => UserStatus::STATUS_ACTIVE->value]);
+    }
+
+    /**
+     * Mark the given user's frozen.
+     */
+    public function markFrozen(): bool
+    {
+        return $this->updateQuietly(['status' => UserStatus::STATUS_FROZEN->value]);
+    }
+
+    /**
+     * Determine if the user has active.
+     */
+    public function isFrozen(): bool
+    {
+        return $this->status->isFrozen();
+    }
+
+    /**
+     * 验证支付密码是否正确
+     */
+    public function verifyPayPassword($password): bool
+    {
+        return $this->pay_password && Hash::check($password, $this->pay_password);
+    }
+
+    /**
+     * 是否是VIP会员
+     */
+    public function isVip(): bool
+    {
+        return $this->vip_expiry_at && $this->vip_expiry_at->gt(Carbon::now());
+    }
+
+    /**
+     * 刷新最后活动时间
+     */
+    public function refreshLastActiveAt(): void
+    {
+        $this->loadMissing('extra');
+
+        if (empty($this->extra->last_active_at) || $this->extra->last_active_at->lt(Carbon::now()->subMinutes(5))) {
+            $this->extra->updateQuietly(['last_active_at' => Carbon::now()]);
+        }
+    }
+
+    /**
+     * 刷新首次活动时间
+     *
+     * @return $this
+     */
+    public function refreshFirstActiveAt(): static
+    {
+        $this->loadMissing('extra');
+
+        if (! $this->extra->first_active_at) {
+            $this->extra->updateQuietly(['first_active_at' => Carbon::now()]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * 重置用户头像
+     */
+    public function resetAvatar(): bool
+    {
+        if ($this->hasAvatar() && $this->getRawOriginal('avatar') != User::DEFAULT_AVATAR) {
+            try {
+                if (Storage::delete($this->getRawOriginal('avatar'))) {
+                    $this->forceFill(['avatar' => null])->updateQuietly();
+
+                    return true;
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to delete user avatar for user ID: '.$this->id.'. Error: '.$e->getMessage());
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 重置用户名
+     */
+    public function resetUsername(string $username): void
+    {
+        $this->loadMissing('extra');
+
+        if ($username != $this->username) {
+            $this->update(['username' => $username]);
+            $this->extra->increment('username_change_count');
+            Event::dispatch(new \App\Events\User\UsernameReset($this));
+        }
+    }
+
+    /**
+     * 重置用户密码
+     */
+    public function resetPassword(string $password): void
+    {
+        $this->password = $password;
+        $this->setRememberToken(\Illuminate\Support\Str::random(60));
+        $this->saveQuietly();
+        Event::dispatch(new \Illuminate\Auth\Events\PasswordReset($this));
+    }
+
+    /**
+     * 重置用户支付密码
+     */
+    public function modifyPayPassword(string $password): void
+    {
+        $this->pay_password = $password;
+        $this->saveQuietly();
+        Event::dispatch(new \App\Events\User\PayPasswordReset($this));
+    }
+
+    /**
+     * 重置用户手机号
+     */
+    public function resetPhone(int|string $phone): bool
+    {
+        $status = $this->forceFill(['phone' => $phone])->saveQuietly();
+        $this->extra->forceFill(['phone_verified_at' => $this->freshTimestamp()])->saveQuietly();
+        Event::dispatch(new \App\Events\User\PhoneReset($this));
+
+        return $status;
+    }
+
+    /**
+     * 重置用户邮箱
+     */
+    public function resetEmail(string $email): bool
+    {
+        $status = $this->forceFill(['email' => $email])->saveQuietly();
+        $this->extra->forceFill(['email_verified_at' => $this->freshTimestamp()])->saveQuietly();
+        Event::dispatch(new \App\Events\User\EmailReset($this));
+
+        return $status;
+    }
 }

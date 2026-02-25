@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * This is NOT a freeware, use is subject to license terms.
+ */
+
+declare(strict_types=1);
+
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -71,6 +77,26 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
+        ],
+
+        'kafka' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => \Monolog\Handler\SocketHandler::class,
+            'handler_with' => [
+                'connectionString' => 'tcp://'.env('LOGSTASH_HOST', '192.168.0.116').':'.env('LOGSTASH_PORT', 8601),
+            ],
+            'formatter' => \Monolog\Formatter\JsonFormatter::class,
+        ],
+
+        'logstash' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => \Monolog\Handler\SocketHandler::class,
+            'handler_with' => [
+                'connectionString' => 'tcp://'.env('LOGSTASH_HOST', '192.168.0.116').':'.env('LOGSTASH_PORT', 8601),
+            ],
+            'formatter' => \Monolog\Formatter\JsonFormatter::class,
         ],
 
         'slack' => [
