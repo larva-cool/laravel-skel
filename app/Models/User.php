@@ -20,6 +20,7 @@ use App\Models\User\UserGroup;
 use App\Models\User\UserProfile;
 use App\Models\User\UserSocial;
 use App\Observers\UserObserver;
+use App\Support\UserHelper;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
