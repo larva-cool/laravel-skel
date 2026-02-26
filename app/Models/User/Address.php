@@ -105,7 +105,7 @@ class Address extends Model
             'district' => 'string',
             'address' => 'string',
             'zipcode' => 'integer',
-            'phone' => 'integer',
+            'phone' => 'string',
             'is_default' => 'bool',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',

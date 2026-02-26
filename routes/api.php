@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -56,4 +55,52 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
         $registrar->post('phone-reset-password', [\App\Http\Controllers\Api\V1\AuthController::class, 'resetPasswordByPhone'])->name('reset_password_by_phone'); // 通过手机重置用户登录密码
     });
 
+    /**
+     * 用户接口
+     */
+    Route::group(['prefix' => 'user', 'as' => 'user.'], function (Illuminate\Contracts\Routing\Registrar $registrar) {
+        /**
+         * 通知
+         */
+        Route::group(['prefix' => 'notifications', 'as' => 'notifications.'], function (Illuminate\Contracts\Routing\Registrar $registrar) {
+            $registrar->get('', [\App\Http\Controllers\Api\V1\User\NotificationController::class, 'index'])->name('index'); // 通知列表
+            $registrar->get('unread', [\App\Http\Controllers\Api\V1\User\NotificationController::class, 'unread'])->name('unread'); // 未读通知列表
+            $registrar->post('mark-all-read', [\App\Http\Controllers\Api\V1\User\NotificationController::class, 'markAllAsRead'])->name('mark_all_as_read'); // 标记所有未读通知为已读
+            $registrar->post('mark-read', [\App\Http\Controllers\Api\V1\User\NotificationController::class, 'markAsRead'])->name('mark_as_read'); // 标记指定未读通知为已读
+            $registrar->delete('clear-read', [\App\Http\Controllers\Api\V1\User\NotificationController::class, 'clearRead'])->name('clear_read'); // 清空所有已读通知
+        });
+
+        /**
+         * 公告
+         */
+        Route::group(['prefix' => 'announcement', 'as' => 'announcement.'], function (Illuminate\Contracts\Routing\Registrar $registrar) {
+            $registrar->get('', [\App\Http\Controllers\Api\V1\User\AnnouncementController::class, 'index'])->name('index'); // 获取公告列表
+            $registrar->get('{announcement}', [\App\Http\Controllers\Api\V1\User\AnnouncementController::class, 'show'])->name('show');
+        });
+
+        $registrar->get('', [\App\Http\Controllers\Api\V1\UserController::class, 'baseProfile'])->name('profile'); // 获取基本信息
+        $registrar->post('verify-phone', [\App\Http\Controllers\Api\V1\UserController::class, 'verifyPhone'])->name('verify_phone'); // 验证手机号码
+        $registrar->post('profile', [\App\Http\Controllers\Api\V1\UserController::class, 'modifyProfile'])->name('modify_profile'); // 修改个人资料
+        $registrar->post('username', [\App\Http\Controllers\Api\V1\UserController::class, 'modifyUsername'])->name('modify_username'); // 修改账号
+        $registrar->post('email', [\App\Http\Controllers\Api\V1\UserController::class, 'modifyEMail'])->name('modify_email'); // 修改邮箱
+        $registrar->post('phone', [\App\Http\Controllers\Api\V1\UserController::class, 'modifyPhone'])->name('modify_phone'); // 修改手机号码
+        $registrar->post('avatar', [\App\Http\Controllers\Api\V1\UserController::class, 'modifyAvatar'])->name('modify_avatar'); // 修改头像
+        $registrar->post('password', [\App\Http\Controllers\Api\V1\UserController::class, 'modifyPassword'])->name('modify_password'); // 修改密码
+        $registrar->post('pay-password', [\App\Http\Controllers\Api\V1\UserController::class, 'modifyPayPassword'])->name('modify_pay_password'); // 修改支付密码
+        $registrar->post('socket-id', [\App\Http\Controllers\Api\V1\UserController::class, 'modifySocketId'])->name('modify_socket_id'); // 修改 SocketID
+        $registrar->get('login-histories', [\App\Http\Controllers\Api\V1\UserController::class, 'loginHistories'])->name('login_histories'); // 获取登录历史
+        $registrar->get('invites', [\App\Http\Controllers\Api\V1\UserController::class, 'invites'])->name('invites'); // 获取邀请列表
+        $registrar->get('points', [\App\Http\Controllers\Api\V1\UserController::class, 'points'])->name('points'); // 获取用户积分记录
+        $registrar->get('coins', [\App\Http\Controllers\Api\V1\UserController::class, 'coins'])->name('coins'); // 获取用户金币记录
+        $registrar->apiResource('address', \App\Http\Controllers\Api\V1\User\AddressController::class); // 收货地址
+        $registrar->delete('', [\App\Http\Controllers\Api\V1\UserController::class, 'destroy'])->name('destroy'); // 注销并删除自己的账户
+    });
+
+    /**
+     * 用户协议
+     */
+    Route::group(['prefix' => 'agreement', 'as' => 'agreement.'], function (Illuminate\Contracts\Routing\Registrar $registrar) {
+        $registrar->get('types', [\App\Http\Controllers\Api\V1\AgreementController::class, 'types'])->name('types');
+        $registrar->get('{type}', [\App\Http\Controllers\Api\V1\AgreementController::class, 'show'])->name('show');
+    });
 });

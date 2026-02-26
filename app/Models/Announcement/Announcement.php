@@ -12,7 +12,6 @@ use App\Casts\AsJson;
 use App\Casts\StorageUrl;
 use App\Enum\StatusSwitch;
 use App\Models\Model;
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -111,8 +110,7 @@ class Announcement extends Model
     /**
      * 查询已发布的协议
      */
-    #[Scope]
-    protected function active(Builder $query, string $coverage): Builder
+    protected function scopeActive(Builder $query, string $coverage): Builder
     {
         return $query->where('status', '=', StatusSwitch::ENABLED->value)
             ->where(function (Builder $query) {
