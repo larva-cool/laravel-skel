@@ -20,3 +20,25 @@ $:
         # 环境启动后需要执行的命令
         - name: ls
           script: ls -al
+  # 推送代码时需要执行的命令
+  push:
+    - imports:
+        # 引用密钥仓库中的特定文件
+        - https://cnb.cool/larva-cool/secret/-/blob/main/git.yml
+      stages:
+        - name: sync to github
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/larva-cool/laravel-skel.git
+            auth_type: https
+            username: ${GITHUB_USERNAME}
+            password: ${GITHUB_ACCESS_TOKEN}
+            push_tags: true
+        - name: sync to codeup
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://codeup.aliyun.com/xutongle/larva-cool/laravel-skel.git
+            auth_type: https
+            username: ${CODEUP_USERNAME}
+            password: ${CODEUP_PASSWORD}
+            push_tags: true
