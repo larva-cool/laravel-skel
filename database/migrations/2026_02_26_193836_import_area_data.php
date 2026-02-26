@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        ini_set('memory_limit', '-1');
         $district = FileHelper::json(database_path('data/district-20250328.json'));
         foreach ($district['result'] as $item) {// 省
             $areaId = Area::insertGetId([
