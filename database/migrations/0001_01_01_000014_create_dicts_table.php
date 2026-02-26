@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 use App\Enum\StatusSwitch;
+use App\Models\System\Dict;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -33,6 +34,26 @@ return new class extends Migration
             $table->index('code');
             $table->comment('字典表');
         });
+
+        $feedbackType = Dict::create([
+            'name' => '反馈类型',
+            'code' => 'FEEDBACK_TYPE',
+        ]);
+        $feedbackType->children()->createMany([
+            ['name' => '分类1', 'code' => 'category1'],
+            ['name' => '分类2', 'code' => 'category2'],
+            ['name' => '分类3', 'code' => 'category3'],
+        ]);
+
+        $reportType = Dict::create([
+            'name' => '举报类型',
+            'code' => 'REPORT_TYPE',
+        ]);
+        $reportType->children()->createMany([
+            ['name' => '分类1', 'code' => 'category1'],
+            ['name' => '分类2', 'code' => 'category2'],
+            ['name' => '分类3', 'code' => 'category3'],
+        ]);
     }
 
     /**

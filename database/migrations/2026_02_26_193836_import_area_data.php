@@ -1,23 +1,15 @@
 <?php
 
-/**
- * This is NOT a freeware, use is subject to license terms.
- */
-
-declare(strict_types=1);
-
-namespace Database\Seeders;
-
 use App\Models\System\Area;
 use App\Support\FileHelper;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Migrations\Migration;
 
-class AreaSeeder extends Seeder
+return new class extends Migration
 {
     /**
-     * Run the database seeds.
+     * Run the migrations.
      */
-    public function run(): void
+    public function up(): void
     {
         $district = FileHelper::json(database_path('data/district-20250328.json'));
         $districts = [];
@@ -38,17 +30,24 @@ class AreaSeeder extends Seeder
                 ]);
                 if (isset($dit['districts'])) {// 区
                     foreach ($dit['districts'] as $subDit) {
-                        $districts[] = [
+                        Area::create([
                             'parent_id' => $cityArea->id,
                             'name' => $subDit['fullname'],
                             'area_code' => $subDit['id'],
                             'lat' => $subDit['location']['lat'],
                             'lng' => $subDit['location']['lng'],
-                        ];
+                        ]);
                     }
                 }
             }
         }
-        Area::insert($districts);
     }
-}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Area::truncate();
+    }
+};

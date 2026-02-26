@@ -6,6 +6,7 @@
 
 declare(strict_types=1);
 
+use App\Models\User\UserGroup;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -108,6 +109,9 @@ return new class extends Migration
             $table->timestamp('updated_at')->nullable()->comment('更新时间');
             $table->comment('昵称模型');
         });
+        UserGroup::create([
+            'name' => '注册会员',
+        ]);
     }
 
     /**

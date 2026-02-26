@@ -1,28 +1,15 @@
 <?php
 
-/**
- * This is NOT a freeware, use is subject to license terms.
- */
-
-declare(strict_types=1);
-
-namespace Database\Seeders;
-
 use App\Models\User\Nickname;
 use App\Support\FileHelper;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Migrations\Migration;
 
-/**
- * 随机昵称数据填充
- *
- * @author Tongle Xu <xutongle@gmail.com>
- */
-class NicknameSeeder extends Seeder
+return new class extends Migration
 {
     /**
-     * Run the database seeds.
+     * Run the migrations.
      */
-    public function run(): void
+    public function up(): void
     {
         ini_set('memory_limit', '-1');
         // 写入随机昵称
@@ -41,4 +28,12 @@ class NicknameSeeder extends Seeder
         $data = $nicknames = null;
         unset($data, $nicknames);
     }
-}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Nickname::truncate();
+    }
+};
