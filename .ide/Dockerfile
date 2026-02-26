@@ -62,6 +62,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY .ide/php.ini /etc/php/8.4/cli/conf.d/99-php.ini
 
+# 下载并安装 nvm：
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash \
+    && \. "/root/.nvm/nvm.sh" \
+    && nvm install 24 \
+    && node -v
+
 # 安装 code-server 和 PHP 开发扩展
 RUN curl -fsSL https://code-server.dev/install.sh | sh \
     && code-server --install-extension bmewburn.vscode-intelephense-client \
