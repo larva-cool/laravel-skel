@@ -74,7 +74,7 @@ class AddressTest extends TestCase
         $this->assertEquals('string', $casts['district']);
         $this->assertEquals('string', $casts['address']);
         $this->assertEquals('integer', $casts['zipcode']);
-        $this->assertEquals('integer', $casts['phone']);
+        $this->assertEquals('string', $casts['phone']);
         $this->assertEquals('bool', $casts['is_default']);
         $this->assertEquals('datetime', $casts['created_at']);
         $this->assertEquals('datetime', $casts['updated_at']);
