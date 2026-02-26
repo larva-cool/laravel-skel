@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         $district = FileHelper::json(database_path('data/district-20250328.json'));
-        $districts = [];
         foreach ($district['result'] as $item) {// 省
             $areaId = Area::insertGetId([
                 'name' => $item['fullname'],
@@ -41,6 +40,7 @@ return new class extends Migration
                 }
             }
         }
+        unset($district);
     }
 
     /**
