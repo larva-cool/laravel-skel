@@ -141,7 +141,7 @@ class CoinHelperTest extends TestCase
     public function test_decr_insufficient_coins(): void
     {
         $this->expectException(InsufficientCoinsException::class);
-        $this->expectExceptionMessage('Insufficient coins');
+        $this->expectExceptionMessage('可用金币不足');
 
         // 尝试扣除超过用户余额的金币
         CoinHelper::decr($this->user, 200, $this->source, CoinType::TYPE_SIGN_IN, '测试消费');
