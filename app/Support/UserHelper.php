@@ -32,8 +32,12 @@ class UserHelper
      * @param  string|null  $email  邮箱
      * @param  string|null  $password  密码
      */
-    public static function create(?string $username = null, string|int|null $phone = null, ?string $email = null, ?string $password = null): User
-    {
+    public static function create(
+        ?string $username = null,
+        string|int|null $phone = null,
+        ?string $email = null,
+        ?string $password = null
+    ): User {
         $username = $username ? self::generateUsername($username) : null;
 
         return User::create([
@@ -105,7 +109,7 @@ class UserHelper
     {
         /** @var User $user */
         $user = User::withTrashed()->where('phone', $phone)->first();
-        if (! $user) {
+        if (!$user) {
             $user = self::createByPhone($phone);
             if ($regSource) {
                 $user->markRegSource($regSource);
@@ -182,7 +186,8 @@ class UserHelper
      */
     public static function findByOpenid(SocialProvider $provider, string $openid): ?User
     {
-        $socialUser = UserSocial::query()->with('user')->where('provider', $provider->value)->where('openid', $openid)->first();
+        $socialUser = UserSocial::query()->with('user')->where('provider', $provider->value)->where('openid',
+            $openid)->first();
 
         return $socialUser?->user;
     }
@@ -192,7 +197,8 @@ class UserHelper
      */
     public static function findByUnionid(SocialProvider $provider, string $unionid): ?User
     {
-        $socialUser = UserSocial::query()->with('user')->where('provider', $provider->value)->where('unionid', $unionid)->first();
+        $socialUser = UserSocial::query()->with('user')->where('provider', $provider->value)->where('unionid',
+            $unionid)->first();
 
         return $socialUser?->user;
     }
@@ -216,11 +222,36 @@ class UserHelper
     }
 
     /**
+     * 通过用户名获取用户ID
+     * @param  string  $name
+     * @return int|null
+     */
+    public static function getIdByName(string $name): ?int
+    {
+        return User::query()->where('username', $name)->select(['id'])->value('id');
+    }
+
+    /**
+     * 解析被提及的用户ID
+     * @param  string  $content
+     * @return array
+     */
+    public static function parseMentionedIds(string $content): array
+    {
+        $mentionedUsernames = parse_mentioned_usernames($content);
+        $mentionedUserIds = [];
+        foreach ($mentionedUsernames as $mentionedUsername) {
+            $mentionedUserIds[] = UserHelper::getIdByName($mentionedUsername);
+        }
+        return $mentionedUserIds;
+    }
+
+    /**
      * 获取头像 Url
      */
     public static function getAvatar(?string $avatar): string
     {
-        if (! empty($avatar)) {
+        if (!empty($avatar)) {
             if (URL::isValidUrl($avatar)) {
                 return $avatar;
             }

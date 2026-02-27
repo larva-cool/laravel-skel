@@ -16,8 +16,8 @@ namespace App\Enum;
 class SettingType
 {
     // 值类型
-    public const CAST_TYPE_INT = 'int';
-    public const CAST_TYPE_FLOAT = 'float';
-    public const CAST_TYPE_BOOL = 'bool';
-    public const CAST_TYPE_STRING = 'string';
+    public const string CAST_TYPE_INT = 'int';
+    public const string CAST_TYPE_FLOAT = 'float';
+    public const string CAST_TYPE_BOOL = 'bool';
+    public const string CAST_TYPE_STRING = 'string';
 }
