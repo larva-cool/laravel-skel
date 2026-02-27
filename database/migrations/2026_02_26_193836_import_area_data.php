@@ -1,4 +1,9 @@
 <?php
+/**
+ * This is NOT a freeware, use is subject to license terms.
+ */
+
+declare(strict_types=1);
 
 use App\Models\System\Area;
 use App\Support\FileHelper;
@@ -12,36 +17,11 @@ return new class extends Migration
     public function up(): void
     {
         ini_set('memory_limit', '-1');
-        $district = FileHelper::json(database_path('data/district-20250328.json'));
-        foreach ($district['result'] as $item) {// 省
-            $areaId = Area::insertGetId([
-                'name' => $item['fullname'],
-                'area_code' => $item['id'],
-                'lat' => $item['location']['lat'],
-                'lng' => $item['location']['lng'],
-            ]);
-            foreach ($item['districts'] as $dit) {// 市
-                $cityArea = Area::create([
-                    'parent_id' => $areaId,
-                    'name' => $dit['fullname'],
-                    'area_code' => $dit['id'],
-                    'lat' => $dit['location']['lat'],
-                    'lng' => $dit['location']['lng'],
-                ]);
-                if (isset($dit['districts'])) {// 区
-                    foreach ($dit['districts'] as $subDit) {
-                        Area::create([
-                            'parent_id' => $cityArea->id,
-                            'name' => $subDit['fullname'],
-                            'area_code' => $subDit['id'],
-                            'lat' => $subDit['location']['lat'],
-                            'lng' => $subDit['location']['lng'],
-                        ]);
-                    }
-                }
-            }
-        }
-        unset($district);
+        $districts = FileHelper::json(database_path('data/areas-20260226.json'));
+        \Illuminate\Support\Facades\DB::transaction(function () use ($districts) {
+            Area::insert($districts);
+        });
+        unset($districts);
     }
 
     /**
