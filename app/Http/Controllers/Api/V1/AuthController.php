@@ -173,7 +173,7 @@ class AuthController extends Controller
     public function destroyToken(Request $request, $tokenId): Response
     {
         $token = $request->user()->tokens()->where('id', $tokenId)->first();
-        if (!$token) {
+        if (! $token) {
             return response()->noContent(404);
         }
         $token->delete();

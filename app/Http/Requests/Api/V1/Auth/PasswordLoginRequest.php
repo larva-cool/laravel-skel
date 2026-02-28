@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\Hash;
  */
 class PasswordLoginRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      */

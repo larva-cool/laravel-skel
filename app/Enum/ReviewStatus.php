@@ -37,7 +37,6 @@ enum ReviewStatus: string implements \JsonSerializable
 
     /**
      * 是否 待审核
-     * @return bool
      */
     public function isPending(): bool
     {
@@ -46,7 +45,6 @@ enum ReviewStatus: string implements \JsonSerializable
 
     /**
      * 是否已审核
-     * @return bool
      */
     public function isApproved(): bool
     {
@@ -55,7 +53,6 @@ enum ReviewStatus: string implements \JsonSerializable
 
     /**
      * 是否 需要人工复核
-     * @return bool
      */
     public function isReview(): bool
     {
@@ -64,7 +61,6 @@ enum ReviewStatus: string implements \JsonSerializable
 
     /**
      * 是否已经拒绝
-     * @return bool
      */
     public function isRejected(): bool
     {

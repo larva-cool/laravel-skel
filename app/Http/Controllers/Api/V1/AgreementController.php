@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Enum\DictCode;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\AgreementResource;
 use App\Models\Agreement\Agreement;
@@ -25,9 +24,7 @@ class AgreementController extends Controller
     /**
      * Constructor.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * 协议类型

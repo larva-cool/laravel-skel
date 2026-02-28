@@ -1,4 +1,9 @@
 <?php
+/**
+ * This is NOT a freeware, use is subject to license terms.
+ */
+
+declare(strict_types=1);
 
 namespace App\Notifications\Content;
 
@@ -44,7 +49,7 @@ class MentionedInComment extends Notification
             'comment_id' => $this->comment->id,
             'content' => $this->comment->content,
             'user_id' => $this->comment->user_id,
-            'message' => 'You were mentioned in a comment'
+            'message' => 'You were mentioned in a comment',
         ];
     }
 }

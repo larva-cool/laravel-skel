@@ -45,10 +45,9 @@ use Illuminate\Support\Carbon;
 #[UsePolicy(CommentPolicy::class)]
 class Comment extends Model
 {
-    //use Traits\HasLikeable;
-    use Traits\HasUser;
     use HasFactory;
-
+    // use Traits\HasLikeable;
+    use Traits\HasUser;
     public const UPDATED_AT = null;
 
     /**
@@ -65,7 +64,7 @@ class Comment extends Model
      */
     protected $fillable = [
         'user_id', 'source_id', 'source_type', 'is_top', 'like_count', 'comment_count', 'status', 'content',
-        'ip_address', 'mentioned_users'
+        'ip_address', 'mentioned_users',
     ];
 
     /**
@@ -74,7 +73,7 @@ class Comment extends Model
      * @var list<string>
      */
     protected $hidden = [
-        'user_id', 'mentioned_users'
+        'user_id', 'mentioned_users',
     ];
 
     /**
@@ -132,19 +131,19 @@ class Comment extends Model
 
     /**
      * 获取跟Root
-     * @return Model
      */
     public function locateRootOfCommentChain(): Model
     {
         $source = $this->source;
         $isRootSource = false;
         do {
-            if (!$source instanceof Comment) {
+            if (! $source instanceof Comment) {
                 $isRootSource = true;
             } else {
                 $source = $source->source;
             }
-        } while (!$isRootSource);
+        } while (! $isRootSource);
+
         return $source;
     }
 
@@ -158,11 +157,10 @@ class Comment extends Model
 
     /**
      * 标记 已审核
-     * @return true
      */
     public function markApproved(): true
     {
-        if (!$this->status->isApproved()) {
+        if (! $this->status->isApproved()) {
             foreach ($this->mentioned_users as $userId) {
                 $user = User::find($userId);
                 $user?->notify(new MentionedInComment($this));
@@ -171,6 +169,7 @@ class Comment extends Model
             $this->save();
             $this->source()->increment('comment_count');
         }
+
         return true;
     }
 }

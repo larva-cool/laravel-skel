@@ -109,7 +109,7 @@ class UserHelper
     {
         /** @var User $user */
         $user = User::withTrashed()->where('phone', $phone)->first();
-        if (!$user) {
+        if (! $user) {
             $user = self::createByPhone($phone);
             if ($regSource) {
                 $user->markRegSource($regSource);
@@ -223,8 +223,6 @@ class UserHelper
 
     /**
      * 通过用户名获取用户ID
-     * @param  string  $name
-     * @return int|null
      */
     public static function getIdByName(string $name): ?int
     {
@@ -233,8 +231,6 @@ class UserHelper
 
     /**
      * 解析被提及的用户ID
-     * @param  string  $content
-     * @return array
      */
     public static function parseMentionedIds(string $content): array
     {
@@ -243,6 +239,7 @@ class UserHelper
         foreach ($mentionedUsernames as $mentionedUsername) {
             $mentionedUserIds[] = UserHelper::getIdByName($mentionedUsername);
         }
+
         return $mentionedUserIds;
     }
 
@@ -251,7 +248,7 @@ class UserHelper
      */
     public static function getAvatar(?string $avatar): string
     {
-        if (!empty($avatar)) {
+        if (! empty($avatar)) {
             if (URL::isValidUrl($avatar)) {
                 return $avatar;
             }

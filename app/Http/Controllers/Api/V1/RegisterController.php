@@ -48,9 +48,9 @@ class RegisterController extends Controller
     public function exists(CheckAccountRequest $request): JsonResponse
     {
         $query = \App\Models\User::withTrashed();
-        if (!empty($request->email)) {
+        if (! empty($request->email)) {
             $query->whereNotNull('email')->where('email', $request->email);
-        } elseif (!empty($request->phone)) {
+        } elseif (! empty($request->phone)) {
             $query->whereNotNull('phone')->where('phone', $request->phone);
         } else {
             $query->whereNotNull('username')->where('username', $request->username);

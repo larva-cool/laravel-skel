@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App\Http\Requests\Api\V1\Auth;
 
 use App\Enum\SocialProvider;
-use App\Http\Requests\Traits\InteractsWithContent;
 use App\Models\User;
 use App\Support\UserHelper;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +25,6 @@ use Illuminate\Support\Facades\Http;
  */
 class AppleLoginRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      */
