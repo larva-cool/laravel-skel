@@ -10,6 +10,7 @@ namespace Tests\Unit\Events\User;
 
 use App\Events\User\InviteRegistered;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -21,6 +22,8 @@ use Tests\TestCase;
 #[CoversClass(InviteRegistered::class)]
 class InviteRegisteredTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /**
      * 测试事件实例化
      */

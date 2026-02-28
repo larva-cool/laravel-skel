@@ -51,11 +51,12 @@ class AgreementResourceTest extends TestCase
         $this->assertArrayHasKey('id', $result);
         $this->assertArrayHasKey('title', $result);
         $this->assertArrayHasKey('content', $result);
+        $this->assertArrayHasKey('is_agree', $result);
         $this->assertArrayHasKey('created_at', $result);
         $this->assertArrayHasKey('updated_at', $result);
 
         // 验证字段数量
-        $this->assertCount(5, $result);
+        $this->assertCount(6, $result);
     }
 
     #[Test]

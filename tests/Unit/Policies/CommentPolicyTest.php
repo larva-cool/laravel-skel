@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Policies;
 
+use App\Enum\ReviewStatus;
 use App\Models\Content\Comment;
 use App\Models\User;
 use App\Policies\CommentPolicy;
@@ -41,7 +42,7 @@ class CommentPolicyTest extends TestCase
         $policy = new CommentPolicy;
         $user = User::factory()->create();
         $ownComment = Comment::factory()->create(['user_id' => $user->id]);
-        $otherComment = Comment::factory()->create();
+        $otherComment = Comment::factory()->create(['status' => ReviewStatus::APPROVED]);
 
         // 验证用户可以查看自己的评论
         $this->assertTrue($policy->view($user, $ownComment));

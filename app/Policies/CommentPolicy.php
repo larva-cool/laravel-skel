@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Enum\ReviewStatus;
 use App\Models\Content\Comment;
 use App\Models\User;
 
@@ -27,7 +26,10 @@ class CommentPolicy
      */
     public function view(?User $user, Comment $comment): bool
     {
-        return $comment->status->value == ReviewStatus::APPROVED;
+        if($user){
+            return $user->id === $comment->user_id || $comment->status->isApproved();
+        }
+        return $comment->status->isApproved();
     }
 
     /**
