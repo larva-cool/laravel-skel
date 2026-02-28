@@ -17,12 +17,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        ini_set('memory_limit', '-1');
-        $districts = FileHelper::json(database_path('data/areas-20260226.json'));
-        \Illuminate\Support\Facades\DB::transaction(function () use ($districts) {
-            Area::insert($districts);
-        });
-        unset($districts);
+        if (! app()->environment('testing')) {// testing 跳过
+            ini_set('memory_limit', '-1');
+            $districts = FileHelper::json(database_path('data/areas-20260226.json'));
+            \Illuminate\Support\Facades\DB::transaction(function () use ($districts) {
+                Area::insert($districts);
+            });
+            unset($districts);
+        }
     }
 
     /**

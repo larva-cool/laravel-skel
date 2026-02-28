@@ -147,8 +147,8 @@ class AgreementTest extends TestCase
      * 测试 markAsRead 方法
      */
     #[Test]
-    #[TestDox('测试 markAsRead 方法')]
-    public function test_mark_as_read()
+    #[TestDox('测试 markAsAgree 方法')]
+    public function test_mark_as_agree()
     {
         // 创建协议
         $agreement = Agreement::create([
@@ -160,7 +160,7 @@ class AgreementTest extends TestCase
         ]);
 
         // 标记为已读
-        $result = $agreement->markAsRead(1);
+        $result = $agreement->markAsAgree(1);
         $this->assertTrue($result);
 
         // 验证已读记录
@@ -168,7 +168,7 @@ class AgreementTest extends TestCase
         $this->assertNotNull($readRecord);
 
         // 再次标记为已读（应该返回 true，但不会创建新记录）
-        $result = $agreement->markAsRead(1);
+        $result = $agreement->markAsAgree(1);
         $this->assertTrue($result);
 
         // 验证只创建了一条记录
@@ -177,11 +177,11 @@ class AgreementTest extends TestCase
     }
 
     /**
-     * 测试 getUnreadCount 方法
+     * 测试 getNotAgreedCount 方法
      */
     #[Test]
-    #[TestDox('测试 getUnreadCount 方法')]
-    public function test_get_unread_count()
+    #[TestDox('测试 getNotAgreedCount 方法')]
+    public function test_get_not_agreed_count()
     {
         // 创建测试数据
         $agreement1 = Agreement::create([
@@ -209,10 +209,10 @@ class AgreementTest extends TestCase
         ]);
 
         // 标记一个协议为已读
-        $agreement1->markAsRead(1);
+        $agreement1->markAsAgree(1);
 
         // 获取未读协议数量
-        $unreadCount = Agreement::getUnreadCount(1, 'privacy');
+        $unreadCount = Agreement::getNotAgreedCount(1, 'privacy');
 
         // 验证结果（应该只有 agreement2 未读，agreement3 已禁用）
         $this->assertEquals(1, $unreadCount);
@@ -222,8 +222,8 @@ class AgreementTest extends TestCase
      * 测试 getUnreadCount 方法（无未读协议）
      */
     #[Test]
-    #[TestDox('测试 getUnreadCount 方法（无未读协议）')]
-    public function test_get_unread_count_no_unread()
+    #[TestDox('测试 getNotAgreedCount 方法（无未读协议）')]
+    public function test_get_not_agreed_count_no_unread()
     {
         // 创建测试数据
         $agreement1 = Agreement::create([
@@ -243,11 +243,11 @@ class AgreementTest extends TestCase
         ]);
 
         // 标记所有协议为已读
-        $agreement1->markAsRead(1);
-        $agreement2->markAsRead(1);
+        $agreement1->markAsAgree(1);
+        $agreement2->markAsAgree(1);
 
         // 获取未读协议数量
-        $unreadCount = Agreement::getUnreadCount(1, 'privacy');
+        $unreadCount = Agreement::getNotAgreedCount(1, 'privacy');
 
         // 验证结果（应该为 0）
         $this->assertEquals(0, $unreadCount);
