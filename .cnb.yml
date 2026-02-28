@@ -47,8 +47,8 @@ $:
             auth_type: https
             username: ${GITHUB_USERNAME}
             password: ${GITHUB_ACCESS_TOKEN}
-            push_tags: true
-            force: true
+            push_tags: "true"
+            force: "true"
         - name: sync to codeup
           image: tencentcom/git-sync
           settings:
@@ -56,5 +56,5 @@ $:
             auth_type: https
             username: ${CODEUP_USERNAME}
             password: ${CODEUP_PASSWORD}
-            push_tags: true
-            force: true
+            push_tags: "true"
+            force: "true"
