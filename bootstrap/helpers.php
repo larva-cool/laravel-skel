@@ -130,6 +130,21 @@ if (!function_exists('ip_address')) {
 }
 
 /**
+ * 安全处理字符串，移除特殊字符
+ */
+if (! function_exists('sanitize_key')) {
+    function sanitize_key(string $key): string
+    {
+        // 限制键长度
+        if (strlen($key) > 255) {
+            $key = substr($key, 0, 255);
+        }
+
+        return preg_replace('/[^a-zA-Z0-9_]/', '', $key);
+    }
+}
+
+/**
  * 解析被提及的用户名
  */
 if (!function_exists('parse_mentioned_usernames')) {
