@@ -75,7 +75,7 @@ class CoinHelper
     /**
      * 创建金币交易记录
      *
-     * @throws InsufficientCoinsException
+     * @throws InsufficientCoinsException|\Throwable
      */
     private static function createTrade(int|string $userId, int $coins, int|string $sourceId, string $sourceType, CoinType $type, string $desc): ?CoinTrade
     {

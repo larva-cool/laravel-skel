@@ -131,6 +131,24 @@ class Comment extends Model
     }
 
     /**
+     * 获取跟Root
+     * @return Model
+     */
+    public function locateRootOfCommentChain(): Model
+    {
+        $source = $this->source;
+        $isRootSource = false;
+        do {
+            if (!$source instanceof Comment) {
+                $isRootSource = true;
+            } else {
+                $source = $source->source;
+            }
+        } while (!$isRootSource);
+        return $source;
+    }
+
+    /**
      * 多态关联
      */
     public function source(): MorphTo
