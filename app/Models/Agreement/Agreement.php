@@ -13,6 +13,7 @@ use App\Models\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -28,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at 添加时间
  * @property Carbon $updated_at 更新时间
  * @property Carbon $deleted_at 删除时间
+ * @property AgreementRead $agree 同意记录
  * @property Collection<int, AgreementRead> $reads 已读关系
  *
  * @method Builder active(string $type) 查询已发布的协议
@@ -99,6 +101,14 @@ class Agreement extends Model
     }
 
     /**
+     * 协议同意关系定义
+     */
+    public function agree(): HasOne
+    {
+        return $this->hasOne(AgreementRead::class);
+    }
+
+    /**
      * 协议已读关系
      */
     public function reads(): HasMany
@@ -107,27 +117,39 @@ class Agreement extends Model
     }
 
     /**
-     * 标记协议为已读
-     *
-     * @param  int  $userId  用户ID
+     * 是否已经同意
      */
-    public function markAsRead(int $userId): bool
+    public function isAgree(int|string $userId): bool
     {
-        $existing = $this->reads()->where('user_id', $userId)->first();
+        $existing = $this->agree()->where('user_id', $userId)->first();
         if ($existing) {
             return true;
         }
 
-        return (bool) $this->reads()->create(['user_id' => $userId]);
+        return false;
     }
 
     /**
-     * 获取未读协议数量
+     * 标记协议为已读
+     *
+     * @param  int  $userId  用户ID
      */
-    public static function getUnreadCount(int $userId, string $type): int
+    public function markAsAgree(int $userId): bool
+    {
+        if ($this->isAgree($userId)) {
+            return true;
+        }
+
+        return (bool) $this->agree()->create(['user_id' => $userId]);
+    }
+
+    /**
+     * 获取未同意协议数量
+     */
+    public static function getNotAgreedCount(int $userId, string $type): int
     {
         return self::active($type)
-            ->whereDoesntHave('reads', function ($query) use ($userId) {
+            ->whereDoesntHave('agree', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
             ->count();

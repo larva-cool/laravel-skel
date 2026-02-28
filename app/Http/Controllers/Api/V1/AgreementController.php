@@ -22,11 +22,6 @@ use Illuminate\Support\Facades\Auth;
 class AgreementController extends Controller
 {
     /**
-     * Constructor.
-     */
-    public function __construct() {}
-
-    /**
      * 协议类型
      */
     public function types()
@@ -37,41 +32,36 @@ class AgreementController extends Controller
     }
 
     /**
-     * 协议列表
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function index(Request $request)
-    {
-        $perPage = clamp($request->query('per_page', 15), 1, 100);
-        $userId = $request->user()->id;
-        $type = $request->query('type');
-        $items = Agreement::active($type)
-            ->with([
-                'reads' => function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                },
-            ])
-            ->orderByDesc('id')
-            ->paginate($perPage);
-
-        return AgreementResource::collection($items);
-    }
-
-    /**
-     * 按类型获取协议
+     * 按类型获取最新的一个协议
      *
      * @return AgreementResource
      */
     public function show($type)
     {
-        $item = Agreement::active($type)
-            ->orderBy('id', 'desc')
-            ->firstOrFail();
         $user = Auth::guard('sanctum')->user();
+        $query = Agreement::query()->active($type);
         if ($user) {
-            $item->markAsRead($user->id);
+            $query->with([
+                'agree' => function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                },
+            ]);
         }
+        $item = $query->orderBy('id', 'desc')
+            ->firstOrFail();
+
+        return new AgreementResource($item);
+    }
+
+    /**
+     * 同意协议
+     *
+     * @return AgreementResource
+     */
+    public function agree(Request $request)
+    {
+        $item = Agreement::query()->where('id', $request->id)->firstOrFail();
+        $item->markAsAgree($request->user()->id);
 
         return new AgreementResource($item);
     }
