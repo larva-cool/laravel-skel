@@ -8,18 +8,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\V1;
 
+use App\Http\Controllers\Api\V1\CommonController;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
-/**
- * 公共接口控制器功能测试
- */
-#[CoversClass('App\Http\Controllers\Api\V1\CommonController')]
+#[CoversClass(CommonController::class)]
+#[TestDox('通用控制器测试')]
 class CommonControllerTest extends TestCase
 {
-    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * 测试重载 Fpm 方法

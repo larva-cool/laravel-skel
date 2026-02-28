@@ -47,7 +47,7 @@ class Comment extends Model
 {
     use HasFactory;
 
-    // use Traits\HasLikeable;
+    use Traits\HasLikeable;
     use Traits\HasUser;
     public const UPDATED_AT = null;
 
