@@ -15,6 +15,7 @@ use App\Models\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -35,6 +36,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at 创建时间
  * @property Carbon $updated_at 更新时间
  * @property Collection<int, AnnouncementRead> $reads 已读关系
+ *
+ * @method Builder active(string $coverage) 查询已发布的公告
  *
  * @author Tongle Xu <xutongle@gmail.com>
  */
@@ -100,6 +103,14 @@ class Announcement extends Model
     }
 
     /**
+     * 已读关系
+     */
+    public function read(): HasOne
+    {
+        return $this->hasOne(AnnouncementRead::class);
+    }
+
+    /**
      * 通知已读关系
      */
     public function reads(): HasMany
@@ -124,6 +135,16 @@ class Announcement extends Model
             ->whereJsonContains('coverage', $coverage);
     }
 
+    public function isRead(int $userId, string $userType): bool
+    {
+        $existing = $this->reads()->where('user_id', $userId)->where('user_type', $userType)->first();
+        if ($existing) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * 标记公告为已读
      *
@@ -131,8 +152,7 @@ class Announcement extends Model
      */
     public function markAsRead(int $userId, string $userType): bool
     {
-        $existing = $this->reads()->where('user_id', $userId)->where('user_type', $userType)->first();
-        if ($existing) {
+        if ($this->isRead($userId, $userType)) {
             return true;
         }
 
@@ -172,7 +192,7 @@ class Announcement extends Model
         $item = self::query()
             ->active($userType)
             ->whereJsonContains('coverage', $userType)
-            ->whereDoesntHave('reads', function ($query) use ($userId, $userType) {
+            ->whereDoesntHave('read', function ($query) use ($userId, $userType) {
                 $query->where('user_id', $userId)->where('user_type', $userType);
             })
             ->orderByDesc('id')
