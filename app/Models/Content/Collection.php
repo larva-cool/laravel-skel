@@ -32,7 +32,6 @@ use Illuminate\Support\Carbon;
  */
 class Collection extends Model
 {
-
     /**
      * The table associated with the model.
      *

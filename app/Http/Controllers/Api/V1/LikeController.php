@@ -34,7 +34,7 @@ class LikeController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = clamp($request->query('per_page', 10),1,100);
+        $perPage = clamp($request->query('per_page', 10), 1, 100);
         $query = Like::with(['source'])
             ->where('user_id', $request->user()->id);
         if ($request->filled('type')) {

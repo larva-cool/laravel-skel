@@ -35,7 +35,7 @@ class CommentController extends Controller
      */
     public function index(Request $request, $source_type, $source_id)
     {
-        $perPage = clamp($request->query('per_page', 10),1,100);
+        $perPage = clamp($request->query('per_page', 10), 1, 100);
         $query = Comment::with(['user'])
             ->where('source_type', $source_type)
             ->where('source_id', $source_id);

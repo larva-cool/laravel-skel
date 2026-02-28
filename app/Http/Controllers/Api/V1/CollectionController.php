@@ -53,7 +53,7 @@ class CollectionController extends Controller
      */
     public function store(StoreCollectionRequest $request)
     {
-        if (!Collection::isExist($request->user()->id, $request->source_type, $request->source_id)) {
+        if (! Collection::isExist($request->user()->id, $request->source_type, $request->source_id)) {
             Collection::create($request->validated());
         }
 

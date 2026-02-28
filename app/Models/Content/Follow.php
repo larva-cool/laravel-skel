@@ -32,7 +32,6 @@ use Illuminate\Support\Carbon;
  */
 class Follow extends Model
 {
-
     /**
      * The table associated with the model.
      *

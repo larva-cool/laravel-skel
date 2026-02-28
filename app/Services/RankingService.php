@@ -144,7 +144,7 @@ class RankingService
     public function getOneDayRankings(string $date, int $start, int $stop): array
     {
         // 参数验证
-        if (!preg_match('/^\d{8}$/', $date)) {
+        if (! preg_match('/^\d{8}$/', $date)) {
             throw new InvalidArgumentException('日期格式不正确，应为YYYYMMDD');
         }
 
@@ -176,7 +176,7 @@ class RankingService
         }
 
         foreach ($dates as $date) {
-            if (!preg_match('/^\d{8}$/', $date)) {
+            if (! preg_match('/^\d{8}$/', $date)) {
                 throw new InvalidArgumentException("日期格式不正确: {$date}，应为YYYYMMDD");
             }
         }
@@ -189,7 +189,7 @@ class RankingService
         $safeOutKey = sanitize_key($outKey);
 
         // 构建键数组
-        $keys = array_map(fn($date) => $this->prefix.$date, $dates);
+        $keys = array_map(fn ($date) => $this->prefix.$date, $dates);
 
         // 设置权重（所有日期权重相同）
         $weights = array_fill(0, count($keys), 1);

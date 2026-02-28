@@ -23,7 +23,7 @@ use Tests\TestCase;
 class InviteRegisteredTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /**
      * 测试事件实例化
      */

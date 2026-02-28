@@ -26,9 +26,10 @@ class CommentPolicy
      */
     public function view(?User $user, Comment $comment): bool
     {
-        if($user){
+        if ($user) {
             return $user->id === $comment->user_id || $comment->status->isApproved();
         }
+
         return $comment->status->isApproved();
     }
 
