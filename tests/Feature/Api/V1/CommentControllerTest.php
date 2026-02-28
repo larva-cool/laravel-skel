@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\V1;
 
+use App\Enum\ReviewStatus;
 use App\Http\Controllers\Api\V1\CommentController;
 use App\Models\Content\Comment;
 use App\Models\User;
@@ -68,7 +69,7 @@ class CommentControllerTest extends TestCase
             'source_id' => 1,
             'source_type' => 'comment',
             'content' => 'Test comment content',
-            'status' => 1,
+            'status' => ReviewStatus::PENDING,
         ], $attributes));
     }
 

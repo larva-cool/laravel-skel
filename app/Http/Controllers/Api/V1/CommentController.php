@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\Comment\StoreCommentRequest;
+use App\Http\Requests\Api\V1\Content\StoreCommentRequest;
 use App\Http\Resources\Api\V1\CommentResource;
 use App\Models\Content\Comment;
 use Illuminate\Http\Request;

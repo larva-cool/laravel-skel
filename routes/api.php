@@ -103,4 +103,31 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
         $registrar->get('types', [\App\Http\Controllers\Api\V1\AgreementController::class, 'types'])->name('types');
         $registrar->get('{type}', [\App\Http\Controllers\Api\V1\AgreementController::class, 'show'])->name('show');
     });
+
+    /**
+     * 评论
+     */
+    Route::group(['as' => 'comments.'], function (Illuminate\Contracts\Routing\Registrar $registrar) {
+        $registrar->get('{sourceType}/{sourceId}/comments', [\App\Http\Controllers\Api\V1\CommentController::class, 'index'])->name('index');
+        $registrar->post('comments', [\App\Http\Controllers\Api\V1\CommentController::class, 'store'])->name('store');
+        $registrar->delete('comments/{comment}', [\App\Http\Controllers\Api\V1\CommentController::class, 'destroy'])->name('destroy');
+    });
+
+    /**
+     * 收藏
+     */
+    Route::group(['as' => 'collections.'], function (Illuminate\Contracts\Routing\Registrar $registrar) {
+        $registrar->get('collections', [\App\Http\Controllers\Api\V1\CollectionController::class, 'index'])->name('index');
+        $registrar->post('collections', [\App\Http\Controllers\Api\V1\CollectionController::class, 'store'])->name('store');
+        $registrar->delete('collections/{collection}', [\App\Http\Controllers\Api\V1\CollectionController::class, 'destroy'])->name('destroy');
+    });
+
+    /**
+     * 点赞
+     */
+    Route::group(['as' => 'likes.'], function (Illuminate\Contracts\Routing\Registrar $registrar) {
+        $registrar->get('likes', [\App\Http\Controllers\Api\V1\LikeController::class, 'index'])->name('index');
+        $registrar->post('likes', [\App\Http\Controllers\Api\V1\LikeController::class, 'store'])->name('store');
+        $registrar->delete('likes/{like}', [\App\Http\Controllers\Api\V1\LikeController::class, 'destroy'])->name('destroy');
+    });
 });

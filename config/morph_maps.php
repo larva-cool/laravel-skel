@@ -8,4 +8,5 @@ declare(strict_types=1);
 return [
     'user' => \App\Models\User::class,
     'point' => \App\Models\Point\PointRecord::class,
+    'comment' => \App\Models\Content\Comment::class,
 ];
