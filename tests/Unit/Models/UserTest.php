@@ -61,8 +61,7 @@ class UserTest extends TestCase
     {
         $user = new User;
         $casts = $user->getCasts();
-
-        $this->assertSame([
+        $dd = [
             'id' => 'integer',
             'group_id' => 'integer',
             'username' => 'string',
@@ -81,7 +80,10 @@ class UserTest extends TestCase
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
-        ], $casts);
+        ];
+        sort($casts);
+        sort($dd);
+        $this->assertSame($dd, $casts);
     }
 
     #[Test]

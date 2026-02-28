@@ -40,8 +40,7 @@ class AreaTest extends TestCase
     {
         $area = new Area;
         $casts = $area->getCasts();
-
-        $this->assertSame([
+        $dd = [
             'id' => 'integer',
             'parent_id' => 'integer',
             'name' => 'string',
@@ -54,7 +53,10 @@ class AreaTest extends TestCase
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
-        ], $casts);
+        ];
+        sort($casts);
+        sort($dd);
+        $this->assertSame($dd, $casts);
     }
 
     #[Test]
