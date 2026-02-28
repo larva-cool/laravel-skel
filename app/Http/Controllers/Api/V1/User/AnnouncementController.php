@@ -38,7 +38,7 @@ class AnnouncementController extends Controller
         $userId = $request->user()->id;
         $items = Announcement::active('user')
             ->with([
-                'reads' => function ($query) use ($userId) {
+                'read' => function ($query) use ($userId) {
                     $query->where('user_id', $userId)->where('user_type', 'user');
                 },
             ])
@@ -55,7 +55,7 @@ class AnnouncementController extends Controller
     {
         $userId = $request->user()->id;
         $announcement->markAsRead($userId, 'user');
-        $announcement->load(['reads' => function ($query) use ($userId) {
+        $announcement->load(['read' => function ($query) use ($userId) {
             $query->where('user_id', $userId);
         }]);
 

@@ -33,7 +33,7 @@ class AnnouncementResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'image' => $this->image,
-            'is_read' => ! $this->reads->isNotEmpty(),
+            'is_read' => $this->relationLoaded('read'),
             'created_at' => $this->created_at?->toDateTimeString(),
         ];
     }
