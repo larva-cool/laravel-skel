@@ -137,6 +137,15 @@ app/
 ./vendor/bin/sail artisan
 ```
 
+### Docker 部署
+```bash
+# 构建 Docker 镜像
+docker build --build-arg ENV=develop -t laravel_skel .
+
+# 运行容器
+docker run -p 8787:8787 -d laravel_skel
+```
+
 ## 监控与调试
 
 ### Telescope
