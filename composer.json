@@ -48,7 +48,7 @@
     "scripts": {
         "setup": [
             "composer install",
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php -r \"file_exists('.env') || copy('.env.develop', '.env');\"",
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "@php artisan storage:link",
@@ -72,7 +72,7 @@
             "vendor/bin/pint --config pint.json"
         ],
         "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+            "@php -r \"file_exists('.env') || copy('.env.develop', '.env');\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi",
