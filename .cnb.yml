@@ -20,24 +20,47 @@ $:
         # 环境启动后需要执行的命令
         - name: ls
           script: ls -al
+
   # 推送标签时需要执行的命令
   tag_push:
-    - services:
+    - name: docker构建推送流水线
+      services:
+        - docker
+      stages:
+        - name: docker login
+          script: docker login -u ${CNB_TOKEN_USER_NAME} -p "${CNB_TOKEN}" ${CNB_DOCKER_REGISTRY}
+        - name: docker build
+          script: docker build --build-arg ENV=prod -t ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}:latest .
+        - name: docker push
+          script: docker push ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}:latest
+
+    - name: 生成CodeWiki流水线
+      services:
         - docker
       docker:
         volumes:
           - /data/codewiki/${CNB_REPO_SLUG}:data
       stages:
         - name: 生成 Code Wiki
-          # 当仓库比较大时，codewiki 用时会超过流水线默认的1小时，导致流水线自动结束。所以手动指定流水线超时时间
           timeout: 2h
           image: cnbcool/codewiki:latest
           settings:
             git_doc_dir: /data/codewiki/${CNB_REPO_SLUG}
-  # 推送代码时需要执行的命令
+
   push:
-    - imports:
-        # 引用密钥仓库中的特定文件
+    - name: docker构建推送流水线
+      services:
+        - docker
+      stages:
+        - name: docker login
+          script: docker login -u ${CNB_TOKEN_USER_NAME} -p "${CNB_TOKEN}" ${CNB_DOCKER_REGISTRY}
+        - name: docker build
+          script: docker build --build-arg ENV=develop -t ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}:develop .
+        - name: docker push
+          script: docker push ${CNB_DOCKER_REGISTRY}/${CNB_REPO_SLUG_LOWERCASE}:develop
+
+    - name: 代码同步流水线
+      imports:
         - https://cnb.cool/larva-cool/secret/-/blob/main/git.yml
       stages:
         - name: sync to github

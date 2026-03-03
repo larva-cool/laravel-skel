@@ -1,4 +1,4 @@
-FROM docker.cnb.cool/larva-cool/php:8.2-alpine
+FROM docker.cnb.cool/larva-cool/php:8.4-alpine
 
 ARG ENV=prod
 
@@ -13,4 +13,4 @@ VOLUME [ "/app/runtime/logs" ]
 
 EXPOSE 8787/tcp
 
-CMD ["php", "/app/artisan", "octane:start"]
+ENTRYPOINT ["php", "artisan", "octane:start"]
