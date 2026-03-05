@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property UserProfile $userProfile 用户资料
  * @property UserExtra $userExtra 用户扩展资料
  *
- * @method static Builder forUser($user)
+ * @method Builder forUser(int|string|User $user) 查询指定用户
  *
  * @mixin Model
  *
@@ -38,7 +38,7 @@ trait HasUser
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class)->withDefault([
-            'name' => '已注销',
+            'name' => '账号已注销',
             'username' => '',
             'email' => '',
             'phone' => null,

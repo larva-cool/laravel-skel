@@ -81,7 +81,7 @@ use Illuminate\Support\Facades\Storage;
  * @property Collection<int,PointTrade> $points 积分交易明细
  * @property Collection<int,CoinTrade> $coins 金币交易明细
  * @property Collection<int,LoginHistory> $loginHistories 登录历史
- * @property \Illuminate\Database\Eloquent\Collection<int,User> $invites 邀请用户
+ * @property Collection<int,User> $invites 邀请用户
  *
  * @method Builder active() 查询活动用户
  * @method Builder keyword(string $keyword) 根据关键词搜索
@@ -96,7 +96,6 @@ class User extends Authenticatable
 
     use Traits\DateTimeFormatter;
     use Traits\HasApiTokens;
-    use Traits\MultiFieldAggregate;
 
     // 默认头像
     public const DEFAULT_AVATAR = 'img/avatar.png';

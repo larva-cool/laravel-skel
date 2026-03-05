@@ -104,6 +104,9 @@ class Dict extends Model
             }
             Cache::forget(CacheKey::key(CacheKey::DICT_TYPE, $model->code));
         });
+        static::deleted(function (Dict $model) {
+            Cache::forget(CacheKey::key(CacheKey::DICT_TYPE, $model->code));
+        });
     }
 
     /**
