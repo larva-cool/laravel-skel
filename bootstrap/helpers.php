@@ -38,6 +38,33 @@ if (!function_exists('get_morph_maps')) {
     }
 }
 
+if (!function_exists('cpu_count')) {
+    /**
+     * Get cpu count
+     * @return int
+     */
+    function cpu_count(): int
+    {
+        // Windows does not support the number of processes setting.
+        if (DIRECTORY_SEPARATOR === '\\') {
+            return 1;
+        }
+        $count = 4;
+        if (is_callable('shell_exec')) {
+            if (strtolower(PHP_OS) === 'darwin') {
+                $count = (int)shell_exec('sysctl -n machdep.cpu.core_count');
+            } else {
+                try {
+                    $count = (int)shell_exec('nproc');
+                } catch (\Throwable $ex) {
+                    // Do nothing
+                }
+            }
+        }
+        return $count > 0 ? $count : 4;
+    }
+}
+
 /**
  * Create a new validation exception from a plain array of messages.
  */
