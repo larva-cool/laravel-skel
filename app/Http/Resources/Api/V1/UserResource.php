@@ -33,7 +33,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'avatar' => $this->avatar,
             'is_vip' => $this->isVip(),
-            'vip_expiry_at' => $this->vip_expiry_at?->toDateTimeString(),
+            'vip_expires_at' => $this->vip_expires_at?->toDateTimeString(),
             'register_time' => $this->created_at->toDateTimeString(),
         ];
     }

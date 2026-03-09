@@ -41,7 +41,7 @@ return new class extends Migration
             $table->string('password')->nullable()->comment('密码');
             $table->string('pay_password')->nullable()->comment('支付密码');
             $table->rememberToken()->comment('记住我token');
-            $table->dateTime('vip_expired_at')->nullable()->comment('VIP过期时间');
+            $table->dateTime('vip_expires_at')->nullable()->comment('VIP过期时间');
             $table->timestamps();
             $table->softDeletes()->comment('删除时间');
 

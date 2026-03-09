@@ -47,7 +47,7 @@ class UserDetailResource extends JsonResource
             'intro' => $this->profile->intro,
             'bio' => $this->profile->bio,
             'invite_code' => $this->extra->invite_code,
-            'vip_expiry_at' => $this->vip_expiry_at?->toDateTimeString(),
+            'vip_expires_at' => $this->vip_expires_at?->toDateTimeString(),
             'register_time' => $this->created_at->toDateTimeString(),
         ];
     }
