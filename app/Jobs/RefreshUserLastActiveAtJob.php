@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Contracts\UserActivity;
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -26,7 +26,7 @@ class RefreshUserLastActiveAtJob implements ShouldBeUnique, ShouldQueue
     /**
      * The user.
      */
-    protected UserActivity $user;
+    protected User $user;
 
     /**
      * The number of seconds after which the job's unique lock will be released.
@@ -40,7 +40,7 @@ class RefreshUserLastActiveAtJob implements ShouldBeUnique, ShouldQueue
      *
      * @return void
      */
-    public function __construct(UserActivity $user)
+    public function __construct(User $user)
     {
         $this->user = $user;
     }
