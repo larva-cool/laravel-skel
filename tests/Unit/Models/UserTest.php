@@ -51,7 +51,7 @@ class UserTest extends TestCase
             'device_id',
             'socket_id',
             'password',
-            'vip_expiry_at',
+            'vip_expires_at',
         ], $fillable);
     }
 
@@ -76,7 +76,7 @@ class UserTest extends TestCase
             'socket_id' => 'string',
             'password' => 'hashed',
             'pay_password' => 'hashed',
-            'vip_expiry_at' => 'datetime',
+            'vip_expires_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
