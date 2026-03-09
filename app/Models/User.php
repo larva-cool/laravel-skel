@@ -59,7 +59,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string $password 密码哈希
  * @property string $pay_password 支付密码哈希
  * @property string $remember_token 记住我 Token
- * @property Carbon|null $vip_expiry_at VIP过期时间
+ * @property Carbon|null $vip_expired_at VIP过期时间
  * @property Carbon $created_at 注册时间
  * @property Carbon $updated_at 最后更新时间
  * @property Carbon|null $deleted_at 删除时间
@@ -114,7 +114,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'group_id', 'username', 'email', 'phone', 'name', 'avatar', 'status', 'available_points', 'available_coins',
-        'socket_id', 'device_id', 'password', 'vip_expiry_at',
+        'socket_id', 'device_id', 'password', 'vip_expired_at',
     ];
 
     /**
@@ -135,7 +135,7 @@ class User extends Authenticatable
         'status' => UserStatus::STATUS_ACTIVE->value,
         'available_points' => 0,
         'available_coins' => 0,
-        'vip_expiry_at' => null,
+        'vip_expired_at' => null,
     ];
 
     /**
@@ -160,7 +160,7 @@ class User extends Authenticatable
             'socket_id' => 'string',
             'password' => 'hashed',
             'pay_password' => 'hashed',
-            'vip_expiry_at' => 'datetime',
+            'vip_expired_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -429,10 +429,10 @@ class User extends Authenticatable
      */
     public function addVipDays(int|string $days): bool
     {
-        if ($this->vip_expiry_at) {
-            $this->vip_expiry_at = $this->vip_expiry_at->addDays($days);
+        if ($this->vip_expired_at) {
+            $this->vip_expired_at = $this->vip_expired_at->addDays($days);
         } else {
-            $this->vip_expiry_at = Carbon::now()->addDays((int) $days);
+            $this->vip_expired_at = Carbon::now()->addDays((int) $days);
         }
 
         return $this->saveQuietly();
@@ -499,7 +499,7 @@ class User extends Authenticatable
      */
     public function isVip(): bool
     {
-        return $this->vip_expiry_at && $this->vip_expiry_at->gt(Carbon::now());
+        return $this->vip_expired_at && $this->vip_expired_at->isFuture();
     }
 
     /**
