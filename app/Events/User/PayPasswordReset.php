@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Events\User;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
 
 /**
@@ -22,7 +23,7 @@ class PayPasswordReset
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  The user.
+     * @param  Authenticatable  $user  The user.
      */
     public function __construct(
         public $user,

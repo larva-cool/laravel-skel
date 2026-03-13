@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Services\WechatService;
 use App\Support\UserHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 /**
  * 微信公众号登录请求
@@ -35,7 +36,7 @@ class WechatMpLoginRequest extends FormRequest
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function authenticate(): User
     {

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Services\SettingManagerService;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
@@ -31,7 +32,7 @@ class DynamicConfigServiceProvider extends ServiceProvider
     public function boot(): void
     {
         try {
-            $instance = Container::getInstance()->make(\App\Services\SettingManagerService::class);
+            $instance = Container::getInstance()->make(SettingManagerService::class);
             if ($instance->has('upload.storage')) {
                 Config::set('filesystems.default', $instance->get('upload.storage'));
             }

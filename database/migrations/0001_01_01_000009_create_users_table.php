@@ -6,6 +6,8 @@
 
 declare(strict_types=1);
 
+use App\Enum\Gender;
+use App\Enum\UserStatus;
 use App\Models\User\UserGroup;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -33,7 +35,7 @@ return new class extends Migration
             $table->string('phone', 20)->unique()->nullable()->comment('手机号（支持国际格式，如+8613800138000）');
             $table->string('name')->nullable()->index()->comment('昵称');
             $table->string('avatar', 1000)->nullable()->comment('头像');
-            $table->unsignedTinyInteger('status')->default(\App\Enum\UserStatus::STATUS_ACTIVE->value)->comment('状态：1、active，0、frozen');
+            $table->unsignedTinyInteger('status')->default(UserStatus::STATUS_ACTIVE->value)->comment('状态：1、active，0、frozen');
             $table->string('socket_id')->index()->nullable()->comment('SocketId');
             $table->string('device_id')->nullable()->index()->comment('设备ID');
             $table->unsignedInteger('available_points')->nullable()->default(0)->comment('可用积分');
@@ -49,7 +51,7 @@ return new class extends Migration
         });
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->primary()->comment('用户ID');
-            $table->unsignedTinyInteger('gender')->default(\App\Enum\Gender::GENDER_UNKNOWN->value)->comment('性别：0/1/2');
+            $table->unsignedTinyInteger('gender')->default(Gender::GENDER_UNKNOWN->value)->comment('性别：0/1/2');
             $table->date('birthday')->nullable()->comment('生日');
             $table->unsignedInteger('province_id')->nullable()->comment('省ID');
             $table->unsignedInteger('city_id')->nullable()->comment('市ID');

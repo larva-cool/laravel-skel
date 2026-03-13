@@ -8,7 +8,14 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\PersonalAccessToken;
+use App\Services\SettingManagerService;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 
 /**
  * 应用服务
@@ -23,8 +30,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // 注册系统设置服务
-        $this->app->singleton(\App\Services\SettingManagerService::class, function () {
-            return new \App\Services\SettingManagerService;
+        $this->app->singleton(SettingManagerService::class, function () {
+            return new SettingManagerService;
         });
 
         if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
@@ -38,10 +45,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Support\Carbon::setLocale('zh');
-        \Illuminate\Http\Resources\Json\JsonResource::withoutWrapping();
-        \Illuminate\Database\Eloquent\Model::shouldBeStrict(! $this->app->isProduction());
-        \Laravel\Sanctum\Sanctum::usePersonalAccessTokenModel(\App\Models\PersonalAccessToken::class);
-        \Illuminate\Database\Eloquent\Relations\Relation::enforceMorphMap(config('morph_maps'));
+        Carbon::setLocale('zh');
+        JsonResource::withoutWrapping();
+        Model::shouldBeStrict(! $this->app->isProduction());
+        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+        Relation::enforceMorphMap(config('morph_maps'));
     }
 }

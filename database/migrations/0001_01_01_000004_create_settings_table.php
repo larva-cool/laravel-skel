@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 use App\Enum\SettingType;
+use App\Models\System\Setting;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -34,7 +35,7 @@ return new class extends Migration
             $table->comment('参数配置信息表');
         });
 
-        \App\Models\System\Setting::batchSet([
+        Setting::batchSet([
             // 基本设置
             ['name' => '网站URL', 'key' => 'system.url', 'value' => 'https://www.xxx.com', 'cast_type' => SettingType::CAST_TYPE_STRING, 'input_type' => SettingType::CAST_TYPE_STRING],
             ['name' => '移动网站URL', 'key' => 'system.m_url', 'value' => 'https://m.xxx.com', 'cast_type' => SettingType::CAST_TYPE_STRING, 'input_type' => SettingType::CAST_TYPE_STRING],

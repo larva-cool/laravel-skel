@@ -12,6 +12,7 @@ use App\Enum\Gender;
 use App\Models\System\Area;
 use App\Models\User;
 use App\Models\User\UserProfile;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -103,7 +104,7 @@ class UserProfileTest extends TestCase
         $model = new UserProfile;
         $relation = $model->user();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        $this->assertInstanceOf(BelongsTo::class, $relation);
         $this->assertEquals('user_id', $relation->getForeignKeyName());
         $this->assertEquals('id', $relation->getOwnerKeyName());
         $this->assertEquals(User::class, $relation->getRelated()::class);
@@ -116,7 +117,7 @@ class UserProfileTest extends TestCase
         $model = new UserProfile;
         $relation = $model->province();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        $this->assertInstanceOf(BelongsTo::class, $relation);
         $this->assertEquals('province_id', $relation->getForeignKeyName());
         $this->assertEquals('id', $relation->getOwnerKeyName());
         $this->assertEquals(Area::class, $relation->getRelated()::class);
@@ -129,7 +130,7 @@ class UserProfileTest extends TestCase
         $model = new UserProfile;
         $relation = $model->city();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        $this->assertInstanceOf(BelongsTo::class, $relation);
         $this->assertEquals('city_id', $relation->getForeignKeyName());
         $this->assertEquals('id', $relation->getOwnerKeyName());
         $this->assertEquals(Area::class, $relation->getRelated()::class);
@@ -142,7 +143,7 @@ class UserProfileTest extends TestCase
         $model = new UserProfile;
         $relation = $model->district();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        $this->assertInstanceOf(BelongsTo::class, $relation);
         $this->assertEquals('district_id', $relation->getForeignKeyName());
         $this->assertEquals('id', $relation->getOwnerKeyName());
         $this->assertEquals(Area::class, $relation->getRelated()::class);

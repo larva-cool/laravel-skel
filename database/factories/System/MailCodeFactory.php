@@ -8,10 +8,11 @@ declare(strict_types=1);
 
 namespace Database\Factories\System;
 
+use App\Models\System\MailCode;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\System\MailCode>
+ * @extends Factory<MailCode>
  */
 class MailCodeFactory extends Factory
 {

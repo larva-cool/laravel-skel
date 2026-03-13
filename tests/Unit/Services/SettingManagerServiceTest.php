@@ -12,6 +12,7 @@ use App\Enum\CacheKey;
 use App\Models\System\Setting;
 use App\Services\SettingManagerService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -42,7 +43,7 @@ class SettingManagerServiceTest extends TestCase
     #[TestDox('测试构造函数初始化 settings 集合不为空')]
     public function test_constructor_initializes_settings_collection()
     {
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $this->service->all());
+        $this->assertInstanceOf(Collection::class, $this->service->all());
         $this->assertNotEmpty($this->service->all());
     }
 

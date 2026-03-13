@@ -105,12 +105,12 @@ class Setting extends Model
      */
     public static function batchSet(array $data): void
     {
-        $updateTime = \Illuminate\Support\Carbon::now();
+        $updateTime = Carbon::now();
         $items = [];
         foreach ($data as $item) {
             $item['updated_at'] = $updateTime;
             $items[] = $item;
         }
-        \App\Models\System\Setting::insert($items);
+        Setting::insert($items);
     }
 }

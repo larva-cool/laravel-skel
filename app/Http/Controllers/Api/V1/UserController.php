@@ -18,7 +18,11 @@ use App\Http\Requests\Api\V1\User\ModifyProfileRequest;
 use App\Http\Requests\Api\V1\User\ModifySocketIdRequest;
 use App\Http\Requests\Api\V1\User\ModifyUsernameRequest;
 use App\Http\Requests\Api\V1\User\VerifyPhoneRequest;
+use App\Http\Resources\Api\V1\CoinResource;
+use App\Http\Resources\Api\V1\LoginHistoryResource;
+use App\Http\Resources\Api\V1\PointResource;
 use App\Http\Resources\Api\V1\UserDetailResource;
+use App\Http\Resources\Api\V1\UserResource;
 use App\Support\UserHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -163,7 +167,7 @@ class UserController extends Controller
         $perPage = clamp($request->query('per_page', 15), 1, 100);
         $items = $request->user()->loginHistories()->orderByDesc('id')->paginate($perPage);
 
-        return \App\Http\Resources\Api\V1\LoginHistoryResource::collection($items);
+        return LoginHistoryResource::collection($items);
     }
 
     /**
@@ -174,7 +178,7 @@ class UserController extends Controller
         $perPage = clamp($request->query('per_page', 15), 1, 100);
         $items = $request->user()->points()->orderByDesc('id')->paginate($perPage);
 
-        return \App\Http\Resources\Api\V1\PointResource::collection($items);
+        return PointResource::collection($items);
     }
 
     /**
@@ -185,7 +189,7 @@ class UserController extends Controller
         $perPage = clamp($request->query('per_page', 15), 1, 100);
         $items = $request->user()->coins()->orderByDesc('id')->paginate($perPage);
 
-        return \App\Http\Resources\Api\V1\CoinResource::collection($items);
+        return CoinResource::collection($items);
     }
 
     /**
@@ -196,7 +200,7 @@ class UserController extends Controller
         $perPage = clamp($request->query('per_page', 15), 1, 100);
         $items = $request->user()->invites()->orderByDesc('id')->paginate($perPage);
 
-        return \App\Http\Resources\Api\V1\UserResource::collection($items);
+        return UserResource::collection($items);
     }
 
     /**

@@ -11,6 +11,7 @@ namespace Tests\Unit\Models\System;
 use App\Enum\StatusSwitch;
 use App\Models\System\Dict;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -247,7 +248,7 @@ class DictTest extends TestCase
     public function test_create_dict_without_required_fields()
     {
         // 尝试创建没有name和code的记录
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
         Dict::create([]);
     }
 

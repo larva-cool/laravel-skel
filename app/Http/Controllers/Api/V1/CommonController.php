@@ -14,6 +14,11 @@ use App\Http\Requests\Api\V1\Common\DictRequest;
 use App\Http\Requests\Api\V1\Common\MailCaptchaRequest;
 use App\Http\Requests\Api\V1\Common\SmsCaptchaRequest;
 use App\Http\Resources\Api\V1\DictResource;
+use App\Models\System\Area;
+use App\Models\System\Dict;
+use App\Services\MailCaptchaService;
+use App\Services\SmsCaptchaService;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -76,7 +81,7 @@ class CommonController extends Controller
      */
     public function smsCaptcha(SmsCaptchaRequest $request): JsonResponse
     {
-        $verifyCode = \App\Services\SmsCaptchaService::make($request->phone, $request->ip(), $request->scene);
+        $verifyCode = SmsCaptchaService::make($request->phone, $request->ip(), $request->scene);
 
         return response()->json($verifyCode->send());
     }
@@ -86,7 +91,7 @@ class CommonController extends Controller
      */
     public function mailCaptcha(MailCaptchaRequest $request): JsonResponse
     {
-        $verifyCode = \App\Services\MailCaptchaService::make($request->email, $request->ip());
+        $verifyCode = MailCaptchaService::make($request->email, $request->ip());
 
         return response()->json($verifyCode->send());
     }
@@ -96,7 +101,7 @@ class CommonController extends Controller
      */
     public function dict(DictRequest $request)
     {
-        $options = \App\Models\System\Dict::getOptions($request->type);
+        $options = Dict::getOptions($request->type);
 
         // 转换为 DictResource 期望的格式
         $items = [];
@@ -115,7 +120,7 @@ class CommonController extends Controller
      */
     public function area(AreaRequest $request): JsonResponse
     {
-        $results = \App\Models\System\Area::getAreas($request->id, ['id', 'name']);
+        $results = Area::getAreas($request->id, ['id', 'name']);
 
         return response()->json($results);
     }
@@ -123,9 +128,9 @@ class CommonController extends Controller
     /**
      * 获取 Source Types
      */
-    public function sourceTypes(): \Illuminate\Http\JsonResponse
+    public function sourceTypes(): JsonResponse
     {
-        $maps = \Illuminate\Database\Eloquent\Relations\Relation::morphMap();
+        $maps = Relation::morphMap();
 
         return response()->json(array_keys($maps));
     }

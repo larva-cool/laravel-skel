@@ -11,6 +11,12 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enum\SocialProvider;
 use App\Enum\UserStatus;
+use App\Events\User\EmailReset;
+use App\Events\User\EmailVerified;
+use App\Events\User\PayPasswordReset;
+use App\Events\User\PhoneReset;
+use App\Events\User\PhoneVerified;
+use App\Events\User\UsernameReset;
 use App\Models\Coin\CoinTrade;
 use App\Models\Point\PointTrade;
 use App\Models\User\Address;
@@ -22,6 +28,7 @@ use App\Models\User\UserSocial;
 use App\Observers\UserObserver;
 use App\Support\UserHelper;
 use Database\Factories\UserFactory;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -35,11 +42,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * 用户模型
@@ -357,7 +366,7 @@ class User extends Authenticatable
     /**
      * 获取手机号
      *
-     * @param  \Illuminate\Notifications\Notification|null  $notification
+     * @param  Notification|null  $notification
      */
     public function routeNotificationForPhone($notification): ?string
     {
@@ -367,7 +376,7 @@ class User extends Authenticatable
     /**
      * 获取微信 Openid
      *
-     * @param  \Illuminate\Notifications\Notification|null  $notification
+     * @param  Notification|null  $notification
      */
     public function routeNotificationForWechat($notification): ?string
     {
@@ -379,7 +388,7 @@ class User extends Authenticatable
     /**
      * 获取微信小程序 Openid
      *
-     * @param  \Illuminate\Notifications\Notification|null  $notification
+     * @param  Notification|null  $notification
      */
     public function routeNotificationForWechatMini($notification): ?string
     {
@@ -445,7 +454,7 @@ class User extends Authenticatable
     {
         $this->loadMissing('extra');
         $status = $this->extra->forceFill(['phone_verified_at' => $this->freshTimestamp()])->saveQuietly();
-        Event::dispatch(new \App\Events\User\PhoneVerified($this));
+        Event::dispatch(new PhoneVerified($this));
 
         return $status;
     }
@@ -457,7 +466,7 @@ class User extends Authenticatable
     {
         $this->loadMissing('extra');
         $status = $this->extra->forceFill(['email_verified_at' => $this->freshTimestamp()])->saveQuietly();
-        Event::dispatch(new \App\Events\User\EmailVerified($this));
+        Event::dispatch(new EmailVerified($this));
 
         return $status;
     }
@@ -562,7 +571,7 @@ class User extends Authenticatable
         if ($username != $this->username) {
             $this->update(['username' => $username]);
             $this->extra->increment('username_change_count');
-            Event::dispatch(new \App\Events\User\UsernameReset($this));
+            Event::dispatch(new UsernameReset($this));
         }
     }
 
@@ -572,9 +581,9 @@ class User extends Authenticatable
     public function resetPassword(string $password): void
     {
         $this->password = $password;
-        $this->setRememberToken(\Illuminate\Support\Str::random(60));
+        $this->setRememberToken(Str::random(60));
         $this->saveQuietly();
-        Event::dispatch(new \Illuminate\Auth\Events\PasswordReset($this));
+        Event::dispatch(new PasswordReset($this));
     }
 
     /**
@@ -584,7 +593,7 @@ class User extends Authenticatable
     {
         $this->pay_password = $password;
         $this->saveQuietly();
-        Event::dispatch(new \App\Events\User\PayPasswordReset($this));
+        Event::dispatch(new PayPasswordReset($this));
     }
 
     /**
@@ -594,7 +603,7 @@ class User extends Authenticatable
     {
         $status = $this->forceFill(['phone' => $phone])->saveQuietly();
         $this->extra->forceFill(['phone_verified_at' => $this->freshTimestamp()])->saveQuietly();
-        Event::dispatch(new \App\Events\User\PhoneReset($this));
+        Event::dispatch(new PhoneReset($this));
 
         return $status;
     }
@@ -606,7 +615,7 @@ class User extends Authenticatable
     {
         $status = $this->forceFill(['email' => $email])->saveQuietly();
         $this->extra->forceFill(['email_verified_at' => $this->freshTimestamp()])->saveQuietly();
-        Event::dispatch(new \App\Events\User\EmailReset($this));
+        Event::dispatch(new EmailReset($this));
 
         return $status;
     }

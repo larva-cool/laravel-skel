@@ -8,8 +8,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Api\V1;
 
+use App\Enum\CacheKey;
+use App\Enum\StatusSwitch;
 use App\Http\Controllers\Api\V1\CommonController;
+use App\Models\System\Dict;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -106,32 +110,32 @@ class CommonControllerTest extends TestCase
     public function test_dict()
     {
         // 创建父字典
-        $parentDict = \App\Models\System\Dict::create([
+        $parentDict = Dict::create([
             'name' => '测试字典',
             'code' => 'test',
             'description' => '测试字典描述',
-            'status' => \App\Enum\StatusSwitch::ENABLED->value,
+            'status' => StatusSwitch::ENABLED->value,
         ]);
 
         // 创建子字典
-        \App\Models\System\Dict::create([
+        Dict::create([
             'parent_id' => $parentDict->id,
             'name' => '测试选项1',
             'code' => 'option1',
             'description' => '测试选项1描述',
-            'status' => \App\Enum\StatusSwitch::ENABLED->value,
+            'status' => StatusSwitch::ENABLED->value,
         ]);
 
-        \App\Models\System\Dict::create([
+        Dict::create([
             'parent_id' => $parentDict->id,
             'name' => '测试选项2',
             'code' => 'option2',
             'description' => '测试选项2描述',
-            'status' => \App\Enum\StatusSwitch::ENABLED->value,
+            'status' => StatusSwitch::ENABLED->value,
         ]);
 
         // 清除缓存，确保获取最新数据
-        \Illuminate\Support\Facades\Cache::forget(sprintf(\App\Enum\CacheKey::DICT_TYPE, 'test'));
+        Cache::forget(sprintf(CacheKey::DICT_TYPE, 'test'));
 
         // 发送请求
         $response = $this->get('/api/v1/common/dict?type=test');

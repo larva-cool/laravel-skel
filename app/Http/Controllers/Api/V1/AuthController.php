@@ -19,6 +19,7 @@ use App\Http\Requests\Api\V1\Auth\WechatMpLoginRequest;
 use App\Http\Resources\Api\V1\TokenResource;
 use App\Jobs\User\DeleteAccessTokenJob;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -44,7 +45,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except(['passwordLogin', 'phoneLogin', 'wxLogin', 'resetPasswordByPhone']);
+        $this->middleware('auth:sanctum')->except(['passwordLogin', 'phoneLogin', 'wxLogin', 'appleLogin', 'resetPasswordByPhone']);
         // 登录限速
         $throttle = 'throttle:'.settings('user.login_throttle', '6,1');
         $this->middleware($throttle)->only(['passwordLogin', 'phoneLogin', 'resetPasswordByPhone']);
@@ -53,7 +54,7 @@ class AuthController extends Controller
     /**
      * 密码登录
      *
-     * @throws ValidationException|\Illuminate\Auth\Access\AuthorizationException
+     * @throws ValidationException|AuthorizationException
      */
     public function passwordLogin(PasswordLoginRequest $request): JsonResponse
     {
@@ -117,8 +118,8 @@ class AuthController extends Controller
      */
     public function resetPasswordByPhone(ResetPasswordByPhoneRequest $request): JsonResponse
     {
-        /** @var \App\Models\User $user */
-        $user = \App\Models\User::query()->where('phone', $request->phone)->first();
+        /** @var User $user */
+        $user = User::query()->where('phone', $request->phone)->first();
         // 清理掉该用户所有的 Token
         $user->flushTokens();
         $user->resetPassword($request->password);

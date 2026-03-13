@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Http\Resources\Api\V1;
 
 use App\Http\Resources\Api\V1\DictResource;
+use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -66,7 +67,7 @@ class DictResourceTest extends TestCase
         $collection = DictResource::collection($testData);
 
         // 创建请求对象
-        $request = new \Illuminate\Http\Request;
+        $request = new Request;
 
         // 转换集合为数组
         $result = $collection->toArray($request);

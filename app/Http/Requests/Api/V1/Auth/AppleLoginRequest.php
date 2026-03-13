@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Support\UserHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\ValidationException;
 
 /**
  * 苹果账号登录请求
@@ -42,7 +43,7 @@ class AppleLoginRequest extends FormRequest
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function authenticate(): User
     {

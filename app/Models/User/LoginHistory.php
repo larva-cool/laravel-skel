@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
+use App\Events\User\TodayFirstLogged;
 use App\Models\Model;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -114,7 +115,7 @@ class LoginHistory extends Model
                 ]);
             }
             if (static::isTodayLogged($model->user_id, $model->user_type)) {// 当天首次登录
-                Event::dispatch(new \App\Events\User\TodayFirstLogged($model));
+                Event::dispatch(new TodayFirstLogged($model));
             }
         });
     }

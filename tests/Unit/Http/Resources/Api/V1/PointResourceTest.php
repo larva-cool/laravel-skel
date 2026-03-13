@@ -13,6 +13,7 @@ use App\Http\Resources\Api\V1\PointResource;
 use App\Models\Point\PointTrade;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -152,8 +153,8 @@ class PointResourceTest extends TestCase
     /**
      * 创建模拟请求对象
      */
-    private function createRequest(): \Illuminate\Http\Request
+    private function createRequest(): Request
     {
-        return new \Illuminate\Http\Request;
+        return new Request;
     }
 }

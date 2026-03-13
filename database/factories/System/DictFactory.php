@@ -8,10 +8,11 @@ declare(strict_types=1);
 
 namespace Database\Factories\System;
 
+use App\Models\System\Dict;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\System\Dict>
+ * @extends Factory<Dict>
  */
 class DictFactory extends Factory
 {

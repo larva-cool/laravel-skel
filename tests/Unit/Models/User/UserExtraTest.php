@@ -11,7 +11,9 @@ namespace Tests\Unit\Models\User;
 use App\Casts\AsJson;
 use App\Models\User;
 use App\Models\User\UserExtra;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -109,7 +111,7 @@ class UserExtraTest extends TestCase
         $this->assertNull($userExtra->invite_code);
 
         // 手动执行邀请码生成逻辑（模拟 creating 事件）
-        $userExtra->invite_code = strtolower((string) \Illuminate\Support\Str::ulid());
+        $userExtra->invite_code = strtolower((string) Str::ulid());
 
         // 生成后邀请码应该不为空
         $this->assertNotNull($userExtra->invite_code);
@@ -126,7 +128,7 @@ class UserExtraTest extends TestCase
         $userExtra = new UserExtra;
         $relation = $userExtra->user();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        $this->assertInstanceOf(BelongsTo::class, $relation);
         $this->assertEquals('user_id', $relation->getForeignKeyName());
         $this->assertEquals('id', $relation->getOwnerKeyName());
         $this->assertEquals(User::class, $relation->getRelated()::class);
@@ -139,7 +141,7 @@ class UserExtraTest extends TestCase
         $userExtra = new UserExtra;
         $relation = $userExtra->referrer();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        $this->assertInstanceOf(BelongsTo::class, $relation);
         $this->assertEquals('referrer_id', $relation->getForeignKeyName());
         $this->assertEquals('id', $relation->getOwnerKeyName());
         $this->assertEquals(User::class, $relation->getRelated()::class);

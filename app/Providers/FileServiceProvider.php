@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Services\FileService;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -23,8 +24,8 @@ class FileServiceProvider extends ServiceProvider
     public function register(): void
     {
         // 注册文件服务
-        $this->app->singleton(\App\Services\FileService::class, function () {
-            return new \App\Services\FileService;
+        $this->app->singleton(FileService::class, function () {
+            return new FileService;
         });
     }
 

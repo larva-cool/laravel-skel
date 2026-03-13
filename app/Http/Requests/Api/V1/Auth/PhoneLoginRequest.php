@@ -12,6 +12,7 @@ use App\Rules\PhoneRule;
 use App\Rules\SmsCaptchaRule;
 use App\Support\UserHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 /**
  * 短信验证码登录
@@ -38,7 +39,7 @@ class PhoneLoginRequest extends FormRequest
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function authenticate()
     {

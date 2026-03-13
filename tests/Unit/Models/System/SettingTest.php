@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Models\System;
 
 use App\Models\System\Setting;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -17,7 +18,7 @@ use Tests\TestCase;
 #[CoversClass(Setting::class)]
 class SettingTest extends TestCase
 {
-    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    use RefreshDatabase;
 
     #[Test]
     #[TestDox('测试模型的基本属性和类型转换')]

@@ -11,6 +11,7 @@ namespace App\Http\Requests\Api\V1\Auth;
 use App\Support\UserHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 /**
  * 密码登录
@@ -38,7 +39,7 @@ class PasswordLoginRequest extends FormRequest
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function authenticate()
     {

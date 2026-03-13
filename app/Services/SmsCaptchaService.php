@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\System\PhoneCode;
+use App\Sms\VerifyCodeMessage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
@@ -107,7 +108,7 @@ class SmsCaptchaService
             $verifyCode = $this->getVerifyCode(true);
             if (! app()->environment('local', 'testing')) {// 生产环境才会发送
                 try {
-                    sms()->send($this->phone, new \App\Sms\VerifyCodeMessage([
+                    sms()->send($this->phone, new VerifyCodeMessage([
                         'code' => $verifyCode,
                         'duration' => $this->duration,
                         'scene' => $this->scene,

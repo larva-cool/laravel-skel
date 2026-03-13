@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Events\User\InviteRegistered;
 use App\Events\User\LoginSucceeded;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Register\CheckAccountRequest;
@@ -17,6 +18,7 @@ use App\Models\User;
 use App\Support\UserHelper;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Event;
 
@@ -47,7 +49,7 @@ class RegisterController extends Controller
      */
     public function exists(CheckAccountRequest $request): JsonResponse
     {
-        $query = \App\Models\User::withTrashed();
+        $query = User::withTrashed();
         if (! empty($request->email)) {
             $query->whereNotNull('email')->where('email', $request->email);
         } elseif (! empty($request->phone)) {
@@ -75,9 +77,9 @@ class RegisterController extends Controller
         }
         // 创建 Token
         $token = $user->createDeviceToken($request->device);
-        Event::dispatch(new \Illuminate\Auth\Events\Registered($user));
+        Event::dispatch(new Registered($user));
         if ($request->invite_code) {
-            Event::dispatch(new \App\Events\User\InviteRegistered($user, $request->invite_code));
+            Event::dispatch(new InviteRegistered($user, $request->invite_code));
         }
         Event::dispatch(new Login($this->guard, $user, false));
         Event::dispatch(new LoginSucceeded($user, $request->ip(), $request->server('REMOTE_PORT'),
@@ -98,9 +100,9 @@ class RegisterController extends Controller
         $user = UserHelper::createByPhone($request->phone, $request->password);
         // 创建 Token
         $token = $user->createDeviceToken($request->device);
-        Event::dispatch(new \Illuminate\Auth\Events\Registered($user));
+        Event::dispatch(new Registered($user));
         if ($request->invite_code) {
-            Event::dispatch(new \App\Events\User\InviteRegistered($user, $request->invite_code));
+            Event::dispatch(new InviteRegistered($user, $request->invite_code));
         }
         Event::dispatch(new Login($this->guard, $user, false));
         Event::dispatch(new LoginSucceeded($user, $request->ip(), $request->server('REMOTE_PORT'),

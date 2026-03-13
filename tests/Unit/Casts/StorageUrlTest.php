@@ -10,6 +10,7 @@ namespace Tests\Unit\Casts;
 
 use App\Casts\StorageUrl;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -18,7 +19,7 @@ use Tests\TestCase;
 #[CoversClass(StorageUrl::class)]
 class StorageUrlTest extends TestCase
 {
-    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    use RefreshDatabase;
 
     #[Test]
     #[TestDox('测试 get 方法处理空值')]

@@ -10,12 +10,18 @@ namespace App\Support;
 
 use App\Enum\SocialProvider;
 use App\Enum\UserStatus;
+use App\Events\User\ModifyAvatar;
 use App\Models\User;
+use App\Models\User\Nickname;
 use App\Models\User\UserExtra;
 use App\Models\User\UserSocial;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * 用户助手
@@ -44,7 +50,7 @@ class UserHelper
             'username' => $username ?? null,
             'phone' => $phone ?? null,
             'email' => $email ?? null,
-            'name' => \App\Models\User\Nickname::getRandomNickname(),
+            'name' => Nickname::getRandomNickname(),
             'password' => $password ?? null,
             'status' => UserStatus::STATUS_ACTIVE->value,
         ]);
@@ -114,7 +120,7 @@ class UserHelper
             if ($regSource) {
                 $user->markRegSource($regSource);
             }
-            Event::dispatch(new \Illuminate\Auth\Events\Registered($user));
+            Event::dispatch(new Registered($user));
         } elseif ($user->trashed()) {
             return null;
         }
@@ -169,7 +175,7 @@ class UserHelper
      * @param  int|string  $userId  用户ID
      * @param  bool  $lock  是否加锁
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<User>
+     * @throws ModelNotFoundException<User>
      */
     public static function findById(int|string $userId, bool $lock = false): User
     {
@@ -262,7 +268,7 @@ class UserHelper
     /**
      * 设置用户头像
      *
-     * @param  \Symfony\Component\HttpFoundation\File\UploadedFile|\Illuminate\Http\File  $file
+     * @param  UploadedFile|File  $file
      */
     public static function setAvatar(User $user, $file): string
     {
@@ -275,7 +281,7 @@ class UserHelper
         );
         if ($filepath) {
             $user->updateQuietly(['avatar' => $filepath]);
-            Event::dispatch(new \App\Events\User\ModifyAvatar($user));
+            Event::dispatch(new ModifyAvatar($user));
 
             return $filepath;
         }

@@ -9,13 +9,14 @@ declare(strict_types=1);
 namespace App\Sms;
 
 use Overtrue\EasySms\Contracts\GatewayInterface;
+use Overtrue\EasySms\Message;
 
 /**
  * 短信验证码
  *
  * @author Tongle Xu <xutongle@msn.com>
  */
-class VerifyCodeMessage extends \Overtrue\EasySms\Message
+class VerifyCodeMessage extends Message
 {
     /**
      * 可用网关

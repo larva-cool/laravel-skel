@@ -6,6 +6,7 @@
 
 declare(strict_types=1);
 
+use App\Enum\ReviewStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->index()->comment('评论用户');
             $table->morphs('source');
             $table->boolean('is_top')->default(false)->comment('评论置顶');
-            $table->string('status')->nullable()->default(\App\Enum\ReviewStatus::PENDING->value)->comment('评论状态');
+            $table->string('status')->nullable()->default(ReviewStatus::PENDING->value)->comment('评论状态');
             $table->unsignedInteger('like_count')->nullable()->default(0)->comment('点赞次数');
             $table->unsignedInteger('comment_count')->nullable()->default(0)->comment('评论回复次数');
             $table->string('content', 1000)->comment('评论内容');

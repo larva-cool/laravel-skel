@@ -13,6 +13,7 @@ use App\Exceptions\InsufficientCoinsException;
 use App\Models\Coin\CoinTrade;
 use App\Models\User;
 use App\Support\CoinHelper;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -225,7 +226,7 @@ class CoinHelperTest extends TestCase
     #[TestDox('测试 createTradeLogWithTransaction 方法在用户不存在时抛出异常')]
     public function test_find_non_existent_user(): void
     {
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $this->expectException(ModelNotFoundException::class);
         $this->expectExceptionMessage('No query results for model [App\Models\User].');
 
         // 使用不存在的用户ID

@@ -51,7 +51,7 @@ class FileService
      */
     public static function getInstance(): FileService
     {
-        return app(\App\Services\FileService::class);
+        return app(FileService::class);
     }
 
     /**
@@ -108,7 +108,7 @@ class FileService
      * @param  DateTimeInterface  $expiration  链接有效期
      * @param  array  $options  上传选项
      */
-    public function temporaryUploadUrl(string $path, \DateTimeInterface $expiration, array $options = []): array
+    public function temporaryUploadUrl(string $path, DateTimeInterface $expiration, array $options = []): array
     {
         return $this->filesystem->temporaryUploadUrl($path, $expiration, $options);
     }
