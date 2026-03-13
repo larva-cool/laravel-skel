@@ -17,7 +17,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! app()->environment('testing')) {// testing 跳过
+        if (! app()->runningUnitTests()) {// testing 跳过
             ini_set('memory_limit', '-1');
             // 写入随机昵称
             $data = FileHelper::json(database_path('data/nickname-20251129.json'));
