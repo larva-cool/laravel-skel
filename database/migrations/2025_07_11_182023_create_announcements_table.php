@@ -33,6 +33,7 @@ return new class extends Migration
             $table->unsignedInteger('read_count')->default(0)->comment('已读次数');
             $table->index(['status', 'effective_time_type'], 'idx_active');
             $table->timestamps();
+            $table->comment('公告表');
         });
 
         Schema::create('announcement_reads', function (Blueprint $table) {
