@@ -1,23 +1,31 @@
 <?php
+
 /**
  * This is NOT a freeware, use is subject to license terms.
  */
+
 declare(strict_types=1);
+use App\Services\SettingManagerService;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Validation\ValidationException;
+use Jenssegers\Agent\Agent;
+use Zhuzhichao\IpLocationZh\Ip;
 
 /**
  * Get setting value or object.
  *
  * @param  mixed|null  $default
- * @return \App\Services\SettingManagerService|mixed
+ * @return SettingManagerService|mixed
  */
-if (!function_exists('settings')) {
+if (! function_exists('settings')) {
     function settings(string $key = '', $default = null)
     {
         if (empty($key)) {
-            return app(\App\Services\SettingManagerService::class);
+            return app(SettingManagerService::class);
         }
 
-        return app(\App\Services\SettingManagerService::class)->get($key, $default);
+        return app(SettingManagerService::class)->get($key, $default);
     }
 }
 
@@ -26,22 +34,21 @@ if (!function_exists('settings')) {
  *
  * @return array
  */
-if (!function_exists('get_morph_maps')) {
+if (! function_exists('get_morph_maps')) {
     function get_morph_maps(): array
     {
-        $maps = \Illuminate\Database\Eloquent\Relations\Relation::morphMap();
+        $maps = Relation::morphMap();
         foreach ($maps as $key => $val) {
-            $maps[$key] = \Illuminate\Support\Facades\Lang::get('morph_maps.'.$val);
+            $maps[$key] = Lang::get('morph_maps.'.$val);
         }
 
         return $maps;
     }
 }
 
-if (!function_exists('cpu_count')) {
+if (! function_exists('cpu_count')) {
     /**
      * Get cpu count
-     * @return int
      */
     function cpu_count(): int
     {
@@ -52,15 +59,16 @@ if (!function_exists('cpu_count')) {
         $count = 4;
         if (is_callable('shell_exec')) {
             if (strtolower(PHP_OS) === 'darwin') {
-                $count = (int)shell_exec('sysctl -n machdep.cpu.core_count');
+                $count = (int) shell_exec('sysctl -n machdep.cpu.core_count');
             } else {
                 try {
-                    $count = (int)shell_exec('nproc');
-                } catch (\Throwable $ex) {
+                    $count = (int) shell_exec('nproc');
+                } catch (Throwable $ex) {
                     // Do nothing
                 }
             }
         }
+
         return $count > 0 ? $count : 4;
     }
 }
@@ -68,10 +76,10 @@ if (!function_exists('cpu_count')) {
 /**
  * Create a new validation exception from a plain array of messages.
  */
-if (!function_exists('validation_exception')) {
+if (! function_exists('validation_exception')) {
     function validation_exception($field, $message)
     {
-        throw \Illuminate\Validation\ValidationException::withMessages([
+        throw ValidationException::withMessages([
             $field => [$message],
         ]);
     }
@@ -80,7 +88,7 @@ if (!function_exists('validation_exception')) {
 /**
  * 限制值在指定范围内
  */
-if (!function_exists('clamp')) {
+if (! function_exists('clamp')) {
     function clamp($value, $min, $max)
     {
         return max($min, min($max, $value));
@@ -90,14 +98,14 @@ if (!function_exists('clamp')) {
 /**
  * 生成验证码
  */
-if (!function_exists('generate_verify_code')) {
+if (! function_exists('generate_verify_code')) {
     function generate_verify_code(int $length = 6): string
     {
         $letters = '678906789067890678906';
         $vowels = '12345';
         $code = '';
         for ($i = 0; $i < $length; $i++) {
-            if ($i % 2 && mt_rand(0, 10) > 2 || !($i % 2) && mt_rand(0, 10) > 9) {
+            if ($i % 2 && mt_rand(0, 10) > 2 || ! ($i % 2) && mt_rand(0, 10) > 9) {
                 $code .= $vowels[mt_rand(0, 4)];
             } else {
                 $code .= $letters[mt_rand(0, 20)];
@@ -111,10 +119,10 @@ if (!function_exists('generate_verify_code')) {
 /**
  * 手机号替换
  */
-if (!function_exists('mobile_replace')) {
+if (! function_exists('mobile_replace')) {
     function mobile_replace(?string $value): string
     {
-        if (!$value) {
+        if (! $value) {
             return '';
         }
 
@@ -125,11 +133,11 @@ if (!function_exists('mobile_replace')) {
 /**
  * 解析UA
  */
-if (!function_exists('parse_user_agent')) {
+if (! function_exists('parse_user_agent')) {
     function parse_user_agent($userAgent): array
     {
         $userAgent = trim($userAgent);
-        $agent = new \Jenssegers\Agent\Agent;
+        $agent = new Agent;
         $agent->setUserAgent($userAgent);
 
         return [
@@ -147,10 +155,10 @@ if (!function_exists('parse_user_agent')) {
 /**
  * 解析IP归属地
  */
-if (!function_exists('ip_address')) {
+if (! function_exists('ip_address')) {
     function ip_address(string $ip)
     {
-        $location = \Zhuzhichao\IpLocationZh\Ip::find($ip);
+        $location = Ip::find($ip);
 
         return is_array($location) ? implode(' ', $location) : $location;
     }
@@ -174,10 +182,11 @@ if (! function_exists('sanitize_key')) {
 /**
  * 解析被提及的用户名
  */
-if (!function_exists('parse_mentioned_usernames')) {
+if (! function_exists('parse_mentioned_usernames')) {
     function parse_mentioned_usernames(string $content): array
     {
         preg_match_all('/@([a-zA-Z0-9_]+)/', $content, $matches);
+
         return $matches[1] ?? [];
     }
 }

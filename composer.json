@@ -6,7 +6,7 @@
     "keywords": ["laravel", "framework", "kit", "skel", "skeleton", "api"],
     "license": "MIT",
     "require": {
-        "php": "^8.4",
+        "php": "^8.2",
         "ext-pdo": "*",
         "intervention/image-laravel": "^1.5",
         "jenssegers/agent": "^2.6",
@@ -17,7 +17,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.0",
-        "overtrue/easy-sms": "^3.3",
+        "overtrue/easy-sms": "^3.2",
         "predis/predis": "^3.4",
         "zhuzhichao/ip-location-zh": "^2.4"
     },
