@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Jobs\User;
 
+use App\Models\Coin\CoinTrade;
 use App\Models\User;
 use App\Models\User\UserExtra;
 use App\Models\User\UserStat;
@@ -47,12 +48,14 @@ class StatUserJob implements ShouldQueue
             $totalCoin = User::query()->sum('available_coins');
             $registerCount = User::query()->whereDate('created_at', $this->statDate)->count('id');
             $activeUserCount = UserExtra::query()->whereDate('last_active_at', $this->statDate)->count();
+            $coinTradeCount = CoinTrade::query()->whereDate('created_at', $this->statDate)->sum('coins');
             UserStat::create([
                 'stat_date' => $this->statDate,
                 'total_user_count' => $totalCount,
                 'total_coin_count' => $totalCoin,
                 'new_user_count' => $registerCount,
                 'active_user_count' => $activeUserCount,
+                'coin_trade_count' => $coinTradeCount,
             ]);
         }
     }

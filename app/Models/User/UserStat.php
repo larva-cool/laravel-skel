@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This is NOT a freeware, use is subject to license terms.
  */
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property int $total_coin_count 金币总数
  * @property int $new_user_count 新注册用户数
  * @property int $active_user_count 活跃用户数
+ * @property int $coin_trade_count 金币交易总数
  * @property Carbon $created_at 统计时间
  *
  * @author Tongle Xu <xutongle@gmail.com>
@@ -42,7 +44,7 @@ class UserStat extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'stat_date', 'total_user_count', 'total_coin_count', 'new_user_count', 'active_user_count',
+        'stat_date', 'total_user_count', 'total_coin_count', 'new_user_count', 'active_user_count', 'coin_trade_count',
     ];
 
     /**
@@ -59,9 +61,8 @@ class UserStat extends Model
             'total_coin_count' => 'integer',
             'new_user_count' => 'integer',
             'active_user_count' => 'integer',
+            'coin_trade_count' => 'integer',
             'created_at' => 'datetime',
         ];
     }
-
-    
 }
