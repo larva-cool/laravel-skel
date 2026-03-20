@@ -5,11 +5,13 @@
  */
 
 declare(strict_types=1);
+
 use App\Services\SettingManagerService;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use Jenssegers\Agent\Agent;
+use Laravel\Telescope\Telescope;
 use Zhuzhichao\IpLocationZh\Ip;
 
 /**
@@ -188,5 +190,17 @@ if (! function_exists('parse_mentioned_usernames')) {
         preg_match_all('/@([a-zA-Z0-9_]+)/', $content, $matches);
 
         return $matches[1] ?? [];
+    }
+}
+
+/**
+ * 代码中禁用 telescope，防止爆内存
+ */
+if (! function_exists('disable_telescope')) {
+    function disable_telescope(): void
+    {
+        if (class_exists('Laravel\Telescope\Telescope')) {
+            Telescope::stopRecording();
+        }
     }
 }
