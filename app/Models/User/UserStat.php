@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models\User;
 
 use App\Models\Model;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 
 /**
@@ -64,5 +65,26 @@ class UserStat extends Model
             'coin_trade_count' => 'integer',
             'created_at' => 'datetime',
         ];
+    }
+
+    /**
+     * 查询最近几天注册的用户数
+     */
+    public static function getRecentDaysRegistration(int|string $days): int
+    {
+        return (int) self::query()->whereBetween('stat_date', [Carbon::now()->subDays((int) $days), Carbon::now()])->sum('new_user_count');
+    }
+
+    /**
+     * 查询今天注册用户数
+     */
+    public static function getTodayRegistration(): int
+    {
+        $item = self::query()->whereDate('stat_date', Carbon::now())->first();
+        if ($item) {
+            return $item->new_user_count;
+        }
+
+        return User::query()->whereDate('created_at', Carbon::now())->count();
     }
 }

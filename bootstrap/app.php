@@ -26,10 +26,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'abilities' => Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
             'ability' => Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
         ]);
-        // $middleware->web(append: [
-        // ]);
-        // $middleware->api(prepend: [
-        // ]);
+        $middleware->web(append: [
+            \App\Http\Middleware\RefreshUserActiveAt::class,
+        ]);
+        $middleware->api(prepend: [
+            \App\Http\Middleware\RefreshUserActiveAt::class,
+        ]);
         // Configure the CSRF token validation middleware.
         $middleware->validateCsrfTokens([
             '/api/*',
@@ -38,13 +40,22 @@ return Application::configure(basePath: dirname(__DIR__))
         // $middleware->encryptCookies([
         //     //
         // ]);
-        // Configure the trusted proxies for the application.
-        $middleware->trustProxies([
+        // 配置信任的代理 IP
+        $middleware->trustProxies(at: [
+            '127.0.0.1',
             '10.0.0.0/8',
             '100.64.0.0/10',
             '172.16.0.0/16',
             '192.168.0.0/16',
         ]);
+        // 配置信任的代理头
+        $middleware->trustProxies(headers: \Illuminate\Http\Request::HEADER_X_FORWARDED_FOR |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_HOST |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_PORT |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_PROTO |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_PREFIX |
+            \Illuminate\Http\Request::HEADER_X_FORWARDED_AWS_ELB
+        );
         // Configure the URL signature validation middleware.
         // $middleware->validateSignatures([
         //     'fbclid',
@@ -57,4 +68,5 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->level(\PDOException::class, LogLevel::CRITICAL);
+        $exceptions->dontReportDuplicates();
     })->create();

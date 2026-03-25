@@ -69,6 +69,8 @@ return [
             'endpoint' => env('TOS_ENDPOINT'),
             'url' => env('TOS_URL'),
             'ssl' => true,
+            'throw' => false,
+            'report' => false,
         ],
     ],
 

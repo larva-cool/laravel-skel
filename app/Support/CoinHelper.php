@@ -80,6 +80,7 @@ class CoinHelper
     private static function createTrade(int|string $userId, int $coins, int|string $sourceId, string $sourceType, CoinType $type, string $desc): ?CoinTrade
     {
         $conn = CoinTrade::query()->getConnection();
+        // 开始事务
         $conn->beginTransaction();
         try {
             $user = UserHelper::findById((int) $userId, true);

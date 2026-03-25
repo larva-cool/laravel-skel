@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs;
+namespace App\Jobs\User;
 
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldBeUnique;

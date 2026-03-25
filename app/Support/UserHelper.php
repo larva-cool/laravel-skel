@@ -19,6 +19,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -38,12 +39,8 @@ class UserHelper
      * @param  string|null  $email  邮箱
      * @param  string|null  $password  密码
      */
-    public static function create(
-        ?string $username = null,
-        string|int|null $phone = null,
-        ?string $email = null,
-        ?string $password = null
-    ): User {
+    public static function create(?string $username = null, string|int|null $phone = null, ?string $email = null, ?string $password = null): User
+    {
         $username = $username ? self::generateUsername($username) : null;
 
         return User::create([
@@ -214,16 +211,28 @@ class UserHelper
      *
      * @param  User  $user  用户
      * @param  string  $inviteCode  邀请码
+     *
+     * @throws \Throwable
      */
     public static function connectInvite(User $user, string $inviteCode): void
     {
         // 查询推荐人的User ID
         $inviterId = self::findByInviteCode($inviteCode);
         if ($inviterId) {
-            // 更新推荐人用户的邀请注册数
-            UserExtra::query()->where('user_id', $inviterId)->increment('invite_registered_count');
-            // 更新当前用户的推荐人ID
-            UserExtra::query()->where('user_id', $user->id)->update(['referrer_id' => $inviterId]);
+            $conn = UserExtra::query()->getConnection();
+            // 开始事务
+            $conn->beginTransaction();
+            try {
+                // 更新推荐人用户的邀请注册数
+                UserExtra::query()->where('user_id', $inviterId)->increment('invite_registered_count');
+                // 更新当前用户的推荐人ID
+                UserExtra::query()->where('user_id', $user->id)->update(['referrer_id' => $inviterId]);
+                $conn->commit();
+            } catch (\Exception $e) {
+                $conn->rollBack();
+                Log::error('关联邀请码失败', ['user' => $user, 'inviteCode' => $inviteCode, 'exception' => $e]);
+                throw $e;
+            }
         }
     }
 

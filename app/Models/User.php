@@ -438,7 +438,7 @@ class User extends Authenticatable
      */
     public function addVipDays(int|string $days): bool
     {
-        if ($this->vip_expires_at) {
+        if ($this->isVip()) {
             $this->vip_expires_at = $this->vip_expires_at->addDays($days);
         } else {
             $this->vip_expires_at = Carbon::now()->addDays((int) $days);
@@ -521,6 +521,8 @@ class User extends Authenticatable
         if (empty($this->extra->last_active_at) || $this->extra->last_active_at->lt(Carbon::now()->subMinutes(5))) {
             $this->extra->updateQuietly(['last_active_at' => Carbon::now()]);
         }
+        // 首次活动时间
+        $this->refreshFirstActiveAt();
     }
 
     /**

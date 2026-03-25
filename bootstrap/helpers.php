@@ -98,6 +98,16 @@ if (! function_exists('clamp')) {
 }
 
 /**
+ * 获取每页条数
+ */
+if (! function_exists('per_page')) {
+    function per_page($request, int $limit = 15)
+    {
+        return clamp($request->input('per_page', $limit), 1, 100);
+    }
+}
+
+/**
  * 生成验证码
  */
 if (! function_exists('generate_verify_code')) {
