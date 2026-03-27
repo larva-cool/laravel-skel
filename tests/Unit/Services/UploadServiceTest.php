@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Services;
 
-use App\Services\FileService;
+use App\Services\UploadService;
 use Carbon\Carbon;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,10 +19,10 @@ use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 /**
- * FileService 测试
+ * UploadService 测试
  */
-#[TestDox('FileService 测试')]
-class FileServiceTest extends TestCase
+#[TestDox('UploadService 测试')]
+class UploadServiceTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -48,8 +48,8 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 getInstance 方法
-        $fileService = FileService::getInstance();
-        $this->assertInstanceOf(FileService::class, $fileService);
+        $fileService = UploadService::getInstance();
+        $this->assertInstanceOf(UploadService::class, $fileService);
     }
 
     /**
@@ -69,7 +69,7 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 url 方法 - 相对路径
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $result = $fileService->url('test.jpg');
         $this->assertIsString($result);
 
@@ -86,7 +86,7 @@ class FileServiceTest extends TestCase
     public function test_relative_path()
     {
         // 测试 relativePath 方法
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $result = $fileService->relativePath('http://example.com/storage/test.jpg');
         $this->assertIsString($result);
     }
@@ -111,7 +111,7 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 destroy 方法
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $fileService->destroy('http://example.com/test.jpg');
         $this->assertTrue(true); // 只要不抛出异常就算通过
     }
@@ -133,7 +133,7 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 temporaryUrl 方法
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $expiration = Carbon::now()->addHour();
         $result = $fileService->temporaryUrl('test.jpg', $expiration);
         $this->assertIsString($result);
@@ -159,7 +159,7 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 temporaryUploadUrl 方法
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $expiration = Carbon::now()->addHour();
         $result = $fileService->temporaryUploadUrl('test.jpg', $expiration, []);
         $this->assertIsArray($result);
@@ -183,7 +183,7 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 path 方法
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $result = $fileService->path('test.jpg');
         $this->assertEquals($expectedPath, $result);
     }
@@ -217,7 +217,7 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 uploadFile 方法
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $result = $fileService->uploadFile($uploadedFile);
         $this->assertIsArray($result);
         $this->assertEquals('local', $result['storage']);
@@ -257,7 +257,7 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 uploadFile 方法
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $result = $fileService->uploadFile($uploadedFile);
         $this->assertIsArray($result);
     }
@@ -291,7 +291,7 @@ class FileServiceTest extends TestCase
             ->andReturn($filesystemMock);
 
         // 测试 uploadFile 方法
-        $fileService = new FileService;
+        $fileService = new UploadService;
         $result = $fileService->uploadFile($uploadedFile);
         $this->assertFalse($result);
     }

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Services\FileService;
+use App\Services\UploadService;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -16,7 +16,7 @@ use Illuminate\Support\ServiceProvider;
  *
  * @author Tongle Xu <xutongle@msn.com>
  */
-class FileServiceProvider extends ServiceProvider
+class UploadServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -24,8 +24,8 @@ class FileServiceProvider extends ServiceProvider
     public function register(): void
     {
         // 注册文件服务
-        $this->app->singleton(FileService::class, function () {
-            return new FileService;
+        $this->app->singleton(UploadService::class, function () {
+            return new UploadService;
         });
     }
 

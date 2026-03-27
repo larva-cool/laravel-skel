@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Models\System\Attachment;
-use App\Services\FileService;
+use App\Services\UploadService;
 
 /**
  * 附件模型观察者
@@ -39,6 +39,6 @@ class AttachmentObserver
      */
     public function deleted(Attachment $attachment): void
     {
-        FileService::getInstance()->destroy($attachment->file_path);
+        UploadService::getInstance()->destroy($attachment->file_path);
     }
 }

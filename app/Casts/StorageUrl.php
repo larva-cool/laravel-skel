@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Casts;
 
-use App\Services\FileService;
+use App\Services\UploadService;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,14 +25,14 @@ class StorageUrl implements CastsAttributes
     /**
      * 文件服务实例
      */
-    protected FileService $fileService;
+    protected UploadService $fileService;
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->fileService = FileService::getInstance();
+        $this->fileService = UploadService::getInstance();
     }
 
     /**

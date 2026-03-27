@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\URL;
  *
  * @author Tongle Xu <xutongle@msn.com>
  */
-class FileService
+class UploadService
 {
     /**
      * Use (unique or datetime or sequence) name for store upload file.
@@ -37,7 +37,7 @@ class FileService
     protected Filesystem $filesystem;
 
     /**
-     * FileService constructor.
+     * UploadService constructor.
      */
     public function __construct()
     {
@@ -49,9 +49,9 @@ class FileService
     /**
      * 获取文件服务实例
      */
-    public static function getInstance(): FileService
+    public static function getInstance(): UploadService
     {
-        return app(FileService::class);
+        return app(UploadService::class);
     }
 
     /**

@@ -8,17 +8,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Providers;
 
-use App\Providers\FileServiceProvider;
-use App\Services\FileService;
+use App\Providers\UploadServiceProvider;
+use App\Services\UploadService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 /**
- * FileServiceProvider 测试
+ * UploadServiceProvider 测试
  */
-#[TestDox('FileServiceProvider 测试')]
-class FileServiceProviderTest extends TestCase
+#[TestDox('UploadServiceProvider 测试')]
+class UploadServiceProviderTest extends TestCase
 {
     /**
      * 测试 register 方法
@@ -34,12 +34,12 @@ class FileServiceProviderTest extends TestCase
         $app->expects($this->once())
             ->method('singleton')
             ->with(
-                FileService::class,
+                UploadService::class,
                 $this->isType('callable')
             );
 
         // 创建服务提供者实例并调用 register 方法
-        $provider = new FileServiceProvider($app);
+        $provider = new UploadServiceProvider($app);
         $provider->register();
     }
 
@@ -54,7 +54,7 @@ class FileServiceProviderTest extends TestCase
         $app = $this->createMock('Illuminate\Foundation\Application');
 
         // 创建服务提供者实例并调用 boot 方法
-        $provider = new FileServiceProvider($app);
+        $provider = new UploadServiceProvider($app);
         $provider->boot();
 
         // 由于 boot 方法是空的，我们只需要确保它不会抛出异常

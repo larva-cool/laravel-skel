@@ -10,7 +10,7 @@ namespace Tests\Unit\Observers;
 
 use App\Models\System\Attachment;
 use App\Observers\AttachmentObserver;
-use App\Services\FileService;
+use App\Services\UploadService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
@@ -71,8 +71,8 @@ class AttachmentObserverTest extends TestCase
         $attachment = new Attachment;
         $attachment->file_path = 'test/file/path.jpg';
 
-        // 模拟 FileService
-        $this->mock(FileService::class, function ($mock) {
+        // 模拟 UploadService
+        $this->mock(UploadService::class, function ($mock) {
             $mock->shouldReceive('make')->andReturnSelf();
             $mock->shouldReceive('destroy')->with('test/file/path.jpg')->once();
         });
