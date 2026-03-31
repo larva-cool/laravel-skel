@@ -113,6 +113,8 @@ if (! function_exists('per_page')) {
 if (! function_exists('generate_verify_code')) {
     function generate_verify_code(int $length = 6): string
     {
+        //return \Illuminate\Support\Str::password($length, false, true, false, false);
+
         $letters = '678906789067890678906';
         $vowels = '12345';
         $code = '';
@@ -131,14 +133,14 @@ if (! function_exists('generate_verify_code')) {
 /**
  * 手机号替换
  */
-if (! function_exists('mobile_replace')) {
-    function mobile_replace(?string $value): string
+if (!function_exists('mobile_replace')) {
+    function mobile_replace(?string $value, $character = '*', int $index = 3, int $length = 4): string
     {
-        if (! $value) {
+        if (!$value) {
             return '';
         }
 
-        return substr_replace($value, '****', 3, 4);
+        return \Illuminate\Support\Str::mask($value, $character, $index, $length);
     }
 }
 

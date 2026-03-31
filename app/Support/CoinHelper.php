@@ -27,7 +27,7 @@ class CoinHelper
     /**
      * 增加金币
      *
-     * @throws InsufficientCoinsException
+     * @throws InsufficientCoinsException|\Throwable
      */
     public static function incr(int|string|User $user, int $coins, Model $source, CoinType $type, string $desc = ''): ?CoinTrade
     {
@@ -44,7 +44,7 @@ class CoinHelper
     /**
      * 扣除金币
      *
-     * @throws InsufficientCoinsException
+     * @throws InsufficientCoinsException|\Throwable
      */
     public static function decr(int|string|User $user, int $coins, Model $source, CoinType $type, string $desc = ''): ?CoinTrade
     {

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
 /**
- * 文件服务
+ * 上传服务
  *
  * @author Tongle Xu <xutongle@msn.com>
  */
@@ -41,8 +41,8 @@ class UploadService
      */
     public function __construct()
     {
-        $this->generateName = settings('upload.name_rule');
-        $this->storageName = settings('upload.storage');
+        $this->generateName = settings('upload.name_rule', '');
+        $this->storageName = settings('upload.storage', '');
         $this->filesystem = Storage::disk($this->storageName);
     }
 
