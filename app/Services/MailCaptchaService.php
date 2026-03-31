@@ -12,6 +12,7 @@ use App\Mail\MailVerifyCode;
 use App\Models\System\MailCode;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 /**
  * 邮件验证码
@@ -131,7 +132,7 @@ class MailCaptchaService
         $verifyCode = MailCode::query()->where('email', $this->email)->where('state', 0)->orderBy('send_at',
             'desc')->value('code');
         if ($verifyCode === null || $regenerate) {
-            $verifyCode = generate_verify_code($this->length);
+            $verifyCode = Str::password($this->length, false, true, false, false);
         }
 
         return $verifyCode;

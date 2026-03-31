@@ -12,6 +12,7 @@ use App\Models\System\PhoneCode;
 use App\Sms\VerifyCodeMessage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
 
 /**
@@ -151,7 +152,7 @@ class SmsCaptchaService
         $verifyCode = PhoneCode::query()->where('phone', $this->phone)->where('state', 0)->orderBy('send_at',
             'desc')->value('code');
         if ($verifyCode === null || $regenerate) {
-            $verifyCode = generate_verify_code($this->length);
+            $verifyCode = Str::password($this->length, false, true, false, false);
         }
 
         return $verifyCode;
