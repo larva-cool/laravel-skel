@@ -164,8 +164,7 @@ class UserController extends Controller
      */
     public function loginHistories(Request $request): AnonymousResourceCollection
     {
-        $perPage = clamp($request->query('per_page', 15), 1, 100);
-        $items = $request->user()->loginHistories()->orderByDesc('id')->paginate($perPage);
+        $items = $request->user()->loginHistories()->orderByDesc('id')->paginate(per_page($request));
 
         return LoginHistoryResource::collection($items);
     }
@@ -175,8 +174,7 @@ class UserController extends Controller
      */
     public function points(Request $request): AnonymousResourceCollection
     {
-        $perPage = clamp($request->query('per_page', 15), 1, 100);
-        $items = $request->user()->points()->orderByDesc('id')->paginate($perPage);
+        $items = $request->user()->points()->orderByDesc('id')->paginate(per_page($request));
 
         return PointResource::collection($items);
     }
@@ -186,8 +184,7 @@ class UserController extends Controller
      */
     public function coins(Request $request): AnonymousResourceCollection
     {
-        $perPage = clamp($request->query('per_page', 15), 1, 100);
-        $items = $request->user()->coins()->orderByDesc('id')->paginate($perPage);
+        $items = $request->user()->coins()->orderByDesc('id')->paginate(per_page($request));
 
         return CoinResource::collection($items);
     }
@@ -197,8 +194,7 @@ class UserController extends Controller
      */
     public function invites(Request $request): AnonymousResourceCollection
     {
-        $perPage = clamp($request->query('per_page', 15), 1, 100);
-        $items = $request->user()->invites()->orderByDesc('id')->paginate($perPage);
+        $items = $request->user()->invites()->orderByDesc('id')->paginate(per_page($request));
 
         return UserResource::collection($items);
     }

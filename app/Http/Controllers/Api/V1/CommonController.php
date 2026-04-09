@@ -31,7 +31,7 @@ class CommonController extends Controller
     /**
      * 重载 Fpm
      */
-    public function fpm()
+    public function fpm(): JsonResponse
     {
         if (function_exists('opcache_reset')) {
             opcache_reset();
@@ -45,7 +45,7 @@ class CommonController extends Controller
      *
      * @return JsonResponse
      */
-    public function settings()
+    public function settings(): JsonResponse
     {
         $settings = [
             // 系统基本配置

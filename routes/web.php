@@ -10,4 +10,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\MainController::class, 'index']);
 Route::get('redirect', [\App\Http\Controllers\MainController::class, 'redirect']);
+Route::get('headers', [\App\Http\Controllers\MainController::class, 'headers']);
 

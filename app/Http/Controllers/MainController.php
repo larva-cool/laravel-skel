@@ -32,4 +32,15 @@ class MainController extends Controller
     {
         return view('main.redirect', ['url' => $request->get('url')]);
     }
+
+    public function headers(Request $request)
+    {
+        $headers = $request->headers;
+
+        return [
+            'is_secure' => $request->isSecure(),
+            'servers' => $request->server(),
+            'headers' => $headers->all(),
+        ];
+    }
 }

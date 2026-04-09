@@ -55,6 +55,15 @@ class UserPolicy
     }
 
     /**
+     * 是否允许用户微信小程序登录
+     */
+    public function wechatMiniLogin(?User $user): Response
+    {
+        return settings('user.enable_wechat_mini_login', true) ? Response::allow()
+            : Response::deny(__('user.wechat_mini_login_disabled'));
+    }
+
+    /**
      * 是否允许用户手机号登录
      */
     public function phoneLogin(?User $user): Response

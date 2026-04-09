@@ -135,7 +135,7 @@ class AuthController extends Controller
         $tokenModel = $request->user()->currentAccessToken();
         if ($request->user()->isFrozen()) {// 禁止掉的用户不允许登录
             $request->user()->flushTokens();
-            validation_exception('code', trans('auth.blocked'));
+            validation_exception('code', __('auth.blocked'));
         }
         $token = $request->user()->createDeviceToken($request->device);
         // 一分钟后删除当前这个Token

@@ -35,7 +35,7 @@ class NotificationController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $perPage = clamp($request->query('per_page', 15), 1, 100);
+        $perPage = \per_page($request);
         $notifications = $request->user()->notifications()->paginate($perPage);
 
         return NotificationResource::collection($notifications);
@@ -46,7 +46,7 @@ class NotificationController extends Controller
      */
     public function unread(Request $request): AnonymousResourceCollection
     {
-        $perPage = clamp($request->query('per_page', 15), 1, 100);
+        $perPage = \per_page($request);
         $notifications = $request->user()->unreadNotifications()->paginate($perPage);
 
         return NotificationResource::collection($notifications);

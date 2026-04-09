@@ -19,9 +19,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon $stat_date 统计日期
  * @property int $total_user_count 用户总数
  * @property int $total_coin_count 金币总数
+ * @property int $total_point_count 总积分数
  * @property int $new_user_count 新注册用户数
  * @property int $active_user_count 活跃用户数
- * @property int $coin_trade_count 金币交易总数
+ * @property int $coin_transaction_count 金币交易总数
+ * @property int $point_transaction_count 积分交易总数
  * @property Carbon $created_at 统计时间
  *
  * @author Tongle Xu <xutongle@gmail.com>
@@ -45,7 +47,20 @@ class UserStat extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'stat_date', 'total_user_count', 'total_coin_count', 'new_user_count', 'active_user_count', 'coin_trade_count',
+        'stat_date', 'total_user_count', 'total_coin_count', 'total_point_count', 'new_user_count', 'active_user_count',
+        'coin_transaction_count', 'point_transaction_count',
+    ];
+
+    /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'total_coin_count' => 0,
+        'total_point_count' => 0,
+        'coin_transaction_count' => 0,
+        'point_transaction_count' => 0,
     ];
 
     /**
@@ -60,9 +75,11 @@ class UserStat extends Model
             'stat_date' => 'date:Y-m-d',
             'total_user_count' => 'integer',
             'total_coin_count' => 'integer',
+            'total_point_count' => 'integer',
             'new_user_count' => 'integer',
             'active_user_count' => 'integer',
-            'coin_trade_count' => 'integer',
+            'coin_transaction_count' => 'integer',
+            'point_transaction_count' => 'integer',
             'created_at' => 'datetime',
         ];
     }
@@ -80,6 +97,7 @@ class UserStat extends Model
      */
     public static function getTodayRegistration(): int
     {
+        /** @var UserStat $item */
         $item = self::query()->whereDate('stat_date', Carbon::now())->first();
         if ($item) {
             return $item->new_user_count;

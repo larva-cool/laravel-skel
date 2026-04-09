@@ -34,7 +34,7 @@ class AnnouncementController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $perPage = clamp($request->query('per_page', 15), 1, 100);
+        $perPage = per_page($request);
         $userId = $request->user()->id;
         $items = Announcement::active('user')
             ->with([

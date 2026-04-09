@@ -38,7 +38,7 @@ class AddressController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $perPage = intval($request->get('per_page', 15));
+        $perPage = \per_page($request);
         $items = Address::forUser($request->user()->id)->orderByDesc('id')->paginate($perPage);
 
         return AddressResource::collection($items);

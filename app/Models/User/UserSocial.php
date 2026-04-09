@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * 用户社交账号
  *
  * @property int $id ID
- * @property int $user_id 用户ID
+ * @property int|null $user_id 用户ID
  * @property SocialProvider $provider 渠道
  * @property string $openid 开放平台ID
  * @property string $unionid 开放平台UnionID
