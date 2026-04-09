@@ -144,25 +144,23 @@ class UserHelper
     {
         if (User::withTrashed()->where('username', '=', $username)->exists()) {
             $row = User::withTrashed()->where('username', '=', $username)->count();
-            $username = $username.++$row;
+            $username = self::generateUsername($username.++$row);
         }
 
         return $username;
     }
 
     /**
-     * 查找用户
-     *
-     * @return mixed
+     * 通过账号查找用户
      */
     public static function findForAccount(string $account): ?User
     {
         if (filter_var($account, FILTER_VALIDATE_EMAIL)) {
-            return User::active()->whereNotNull('email')->where('email', $account)->first();
+            return User::query()->whereNotNull('email')->where('email', $account)->first();
         } elseif (preg_match('/^1[2-9]\d{9}$/', $account)) {
-            return User::active()->whereNotNull('phone')->where('phone', $account)->first();
+            return User::query()->whereNotNull('phone')->where('phone', $account)->first();
         } else {
-            return User::active()->whereNotNull('username')->where('username', $account)->first();
+            return User::query()->whereNotNull('username')->where('username', $account)->first();
         }
     }
 
@@ -211,8 +209,6 @@ class UserHelper
      *
      * @param  User  $user  用户
      * @param  string  $inviteCode  邀请码
-     *
-     * @throws \Throwable
      */
     public static function connectInvite(User $user, string $inviteCode): void
     {

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('description')->comment('描述');
             $table->morphs('source');
             $table->string('type')->comment('交易类型');
-            $table->timestamp('created_at')->nullable()->comment('创建时间');
+            $table->timestamp('created_at')->comment('交易时间');
 
             $table->comment('金币交易流水表');
         });
