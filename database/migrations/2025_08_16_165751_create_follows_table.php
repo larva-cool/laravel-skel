@@ -19,11 +19,12 @@ return new class extends Migration
     {
         Schema::create('follows', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->index()->comment('用户ID');
-            $table->morphs('source');
+            $table->unsignedBigInteger('user_id')->comment('用户ID');
+            $table->morphs('source', 'idx_source');
             $table->json('extra')->nullable()->comment('扩展信息');
             $table->timestamps();
 
+            $table->unique(['user_id', 'source_type', 'source_id'], 'uniq_user_source');
             $table->comment('关注');
         });
     }

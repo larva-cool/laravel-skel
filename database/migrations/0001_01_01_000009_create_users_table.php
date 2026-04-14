@@ -13,8 +13,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -48,9 +47,9 @@ return new class extends Migration
             $table->softDeletes()->comment('删除时间');
 
             // 唯一索引（软删除安全版）
-            $table->unique(['deleted_at', 'username']);
-            $table->unique(['deleted_at', 'email']);
-            $table->unique(['deleted_at', 'phone']);
+            $table->unique(['deleted_at', 'username'], 'idx_username');
+            $table->unique(['deleted_at', 'email'], 'idx_email');
+            $table->unique(['deleted_at', 'phone'], 'idx_phone');
 
             // 普通索引（deleted_at 放第一位）
             $table->index(['deleted_at', 'group_id']);
