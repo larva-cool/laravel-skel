@@ -19,12 +19,13 @@ return new class extends Migration
     {
         Schema::create('coin_trades', function (Blueprint $table) {
             $table->id()->from(10000000);
-            $table->unsignedBigInteger('user_id')->index()->comment('用户ID');
+            $table->unsignedBigInteger('user_id')->comment('用户ID');
             $table->integer('coins')->comment('本次交易的金币数');
             $table->string('description')->comment('描述');
             $table->morphs('source');
             $table->string('type')->comment('交易类型');
             $table->timestamp('created_at')->comment('交易时间');
+            $table->index(['user_id','created_at'],'idx_user_id');
 
             $table->comment('金币交易流水表');
         });

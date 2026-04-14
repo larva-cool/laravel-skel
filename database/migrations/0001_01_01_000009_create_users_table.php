@@ -29,15 +29,15 @@ return new class extends Migration
         });
         Schema::create('users', function (Blueprint $table) {
             $table->id()->from(10000000)->comment('用户ID');
-            $table->unsignedBigInteger('group_id')->nullable()->index()->comment('用户组ID');
-            $table->string('username')->unique()->nullable()->comment('用户名');
-            $table->string('email')->unique()->nullable()->comment('邮箱');
-            $table->string('phone', 20)->unique()->nullable()->comment('手机号（支持国际格式，如+8613800138000）');
-            $table->string('name')->nullable()->index()->comment('昵称');
+            $table->unsignedBigInteger('group_id')->nullable()->comment('用户组ID');
+            $table->string('username')->nullable()->comment('用户名');
+            $table->string('email')->nullable()->comment('邮箱');
+            $table->string('phone', 20)->nullable()->comment('手机号（支持国际格式，如+8613800138000）');
+            $table->string('name')->nullable()->comment('昵称');
             $table->string('avatar', 1000)->nullable()->comment('头像');
             $table->unsignedTinyInteger('status')->default(UserStatus::STATUS_ACTIVE->value)->comment('状态：1、active，0、frozen');
-            $table->string('socket_id')->index()->nullable()->comment('SocketId');
-            $table->string('device_id')->nullable()->index()->comment('设备ID');
+            $table->string('socket_id')->nullable()->comment('SocketId');
+            $table->string('device_id')->nullable()->comment('设备ID');
             $table->unsignedInteger('available_points')->nullable()->default(0)->comment('可用积分');
             $table->unsignedInteger('available_coins')->nullable()->default(0)->comment('可用金币');
             $table->string('password')->nullable()->comment('密码');
@@ -46,6 +46,17 @@ return new class extends Migration
             $table->dateTime('vip_expires_at')->nullable()->comment('VIP过期时间');
             $table->timestamps();
             $table->softDeletes()->comment('删除时间');
+
+            // 唯一索引（软删除安全版）
+            $table->unique(['deleted_at', 'username']);
+            $table->unique(['deleted_at', 'email']);
+            $table->unique(['deleted_at', 'phone']);
+
+            // 普通索引（deleted_at 放第一位）
+            $table->index(['deleted_at', 'group_id']);
+            $table->index(['deleted_at', 'name']);
+            $table->index(['deleted_at', 'socket_id']);
+            $table->index(['deleted_at', 'device_id']);
 
             $table->comment('用户表');
         });
