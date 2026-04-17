@@ -25,7 +25,7 @@ return new class extends Migration
             $table->morphs('source');
             $table->string('type')->comment('交易类型');
             $table->timestamp('created_at')->comment('交易时间');
-            $table->index(['user_id','created_at'],'idx_user_id');
+            $table->index(['user_id', 'created_at'], 'idx_coin_trade_user_at');
 
             $table->comment('金币交易流水表');
         });

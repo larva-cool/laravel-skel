@@ -20,11 +20,12 @@ return new class extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->comment('用户ID');
-            $table->morphs('source', 'idx_source');
+            $table->string('source_type')->comment('源类型');
+            $table->unsignedBigInteger('source_id')->comment('源ID');
             $table->json('extra')->nullable()->comment('扩展信息');
             $table->timestamps();
 
-            $table->unique(['user_id', 'source_type', 'source_id'], 'uniq_user_source');
+            $table->unique(['user_id', 'source_type', 'source_id'], 'uniq3_user_source');
             $table->comment('收藏');
         });
     }

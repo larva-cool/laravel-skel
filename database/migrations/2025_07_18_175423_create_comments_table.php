@@ -21,7 +21,8 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id()->comment('评论ID');
             $table->unsignedBigInteger('user_id')->index()->comment('评论用户');
-            $table->morphs('source');
+            $table->string('source_type');
+            $table->unsignedBigInteger('source_id');
             $table->boolean('is_top')->default(false)->comment('评论置顶');
             $table->string('status')->nullable()->default(ReviewStatus::PENDING->value)->comment('评论状态');
             $table->unsignedInteger('like_count')->nullable()->default(0)->comment('点赞次数');
@@ -31,6 +32,8 @@ return new class extends Migration
             $table->ipAddress('ip_address')->nullable()->comment('评论者IP');
             $table->timestamp('created_at')->nullable()->comment('评论时间');
 
+            $table->index(['user_id', 'created_at'], 'idx_comment_user_at');
+            $table->index(['source_type', 'source_id', 'is_top', 'status', 'created_at'], 'idx_comment_source_at');
             $table->comment('评论表');
         });
     }

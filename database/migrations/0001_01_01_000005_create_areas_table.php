@@ -30,8 +30,8 @@ return new class extends Migration
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->id()->comment('区域编码');
-            $table->unsignedBigInteger('parent_id')->index()->nullable()->comment('父地区');
-            $table->string('name', 50)->index()->comment('地区名称');
+            $table->unsignedBigInteger('parent_id')->nullable()->comment('父地区');
+            $table->string('name', 50)->comment('地区名称');
             $table->unsignedInteger('area_code')->nullable()->comment('地区编码');
             $table->float('lat', 10, 6)->nullable()->comment('纬度');
             $table->float('lng', 10, 6)->nullable()->comment('经度');
@@ -40,6 +40,9 @@ return new class extends Migration
             $table->unsignedSmallInteger('order')->default(0)->nullable()->comment('排序');
             $table->timestamps();
             $table->softDeletes()->comment('删除时间');
+            $table->index(['parent_id', 'deleted_at', 'order', 'id'], 'idx_parent_id');
+            $table->index(['name', 'deleted_at'], 'idx_name');
+            $table->index(['area_code', 'deleted_at'], 'idx_area_code');
 
             $table->comment('地区表');
         });

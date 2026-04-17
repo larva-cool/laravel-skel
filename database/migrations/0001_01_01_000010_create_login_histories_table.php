@@ -20,7 +20,8 @@ return new class extends Migration
     {
         Schema::create('login_histories', function (Blueprint $table) {
             $table->id()->from(10000000);
-            $table->morphs('user');
+            $table->string('user_type')->comment('用户类型');
+            $table->unsignedBigInteger('user_id')->comment('用户ID');
             $table->ipAddress('ip')->comment('登录IP');
             $table->unsignedInteger('port')->nullable()->comment('登录端口');
             $table->string('platform', 50)->nullable()->default('Unknown')->comment('系统平台');
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->string('user_agent', 1200)->nullable()->comment('浏览器UA');
             $table->string('address', 1000)->nullable()->comment('地址');
             $table->timestamp('login_at')->nullable()->useCurrent()->comment('登录时间');
-
+            $table->index(['user_type', 'user_id', 'login_at'], 'idx_user_type_id_login_at');
             $table->comment('登录历史表');
         });
 

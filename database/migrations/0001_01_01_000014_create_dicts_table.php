@@ -25,13 +25,14 @@ return new class extends Migration
             $table->string('name')->comment('字典名称');
             $table->string('description')->nullable()->comment('字典描述');
             $table->string('code')->comment('字典编码');
-            $table->text('child_ids')->nullable()->comment('子ID');
             $table->unsignedTinyInteger('status')->default(StatusSwitch::ENABLED->value)->comment('状态');
             $table->unsignedInteger('order')->nullable()->default(99)->comment('排序');
             $table->timestamps();
             $table->softDeletes();
-            $table->index('parent_id');
-            $table->index('code');
+            $table->unique(['code', 'deleted_at'], 'uk_code');
+            $table->index(['parent_id', 'status', 'deleted_at', 'order'], 'idx_parent_status');
+            $table->index(['deleted_at', 'status', 'order'], 'idx_list');
+
             $table->comment('字典表');
         });
 
