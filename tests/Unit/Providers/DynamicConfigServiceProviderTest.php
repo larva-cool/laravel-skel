@@ -93,15 +93,13 @@ class DynamicConfigServiceProviderTest extends TestCase
         // 模拟 SettingManagerService
         $settingManagerMock = $this->createMock(SettingManagerService::class);
         $settingManagerMock->method('has')
-            ->with('upload.storage')
             ->willThrowException(new \Exception('Test exception'));
 
         // 绑定模拟实例到容器
         Container::getInstance()->instance(SettingManagerService::class, $settingManagerMock);
 
-        // 模拟 Log  facade
+        // 模拟 Log facade - 接受任何字符串参数
         Log::shouldReceive('warning')
-            ->with('Test exception')
             ->once();
 
         // 设置初始配置

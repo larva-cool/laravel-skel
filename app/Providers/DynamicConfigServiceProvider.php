@@ -33,6 +33,7 @@ class DynamicConfigServiceProvider extends ServiceProvider
     {
         try {
             $instance = Container::getInstance()->make(SettingManagerService::class);
+            // 上传配置
             if ($instance->has('upload.storage')) {
                 Config::set('filesystems.default', $instance->get('upload.storage'));
             }
