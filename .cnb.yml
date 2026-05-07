@@ -11,6 +11,7 @@ $:
           # 参考文档：https://docs.cnb.cool/zh/grammar/pipeline.html#build
           by:
             - .ide/php.ini
+            - .ide/settings.json
       services:
         # 声明使用 vscode 服务
         - vscode
