@@ -20,17 +20,13 @@ use Illuminate\Support\Str;
  *
  * @property int $user_id 用户ID
  * @property int|null $referrer_id 推荐人ID
- * @property string $last_login_ip 最后登录IP
  * @property int $invite_registered_count 邀请人数
  * @property string $invite_code 邀请码
  * @property string|null $reg_source 注册来源
  * @property int $username_change_count 用户名修改次数
- * @property int $login_count 登录次数
  * @property array|null $restore_data 恢复数据
  * @property Carbon $first_signed_at 首次签到时间
  * @property Carbon $first_active_at 首次活动时间
- * @property Carbon $last_active_at 最后活动时间
- * @property Carbon|null $last_login_at 最后登录时间
  * @property Carbon|null $phone_verified_at 手机号验证时间
  * @property Carbon|null $email_verified_at 邮箱验证时间
  *
@@ -76,9 +72,9 @@ class UserExtra extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'referrer_id', 'last_login_ip', 'invite_registered_count', 'invite_code', 'reg_source', 'username_change_count',
-        'login_count', 'collection_count', 'first_signed_at', 'first_active_at', 'last_active_at', 'last_login_at',
-        'restore_data', 'settings', 'phone_verified_at', 'email_verified_at',
+        'referrer_id', 'invite_registered_count', 'invite_code', 'reg_source', 'username_change_count',
+        'collection_count', 'first_signed_at', 'first_active_at', 'restore_data', 'settings',
+        'phone_verified_at', 'email_verified_at',
     ];
 
     /**
@@ -111,18 +107,14 @@ class UserExtra extends Model
         return [
             'user_id' => 'integer',
             'referrer_id' => 'integer',
-            'last_login_ip' => 'string',
             'invite_registered_count' => 'integer',
             'invite_code' => 'string',
             'reg_source' => 'string',
             'username_change_count' => 'integer',
-            'login_count' => 'integer',
             'restore_data' => AsJson::class,
             'settings' => AsJson::class,
             'collection_count' => 'integer',
             'first_signed_at' => 'datetime',
-            'last_active_at' => 'datetime',
-            'last_login_at' => 'datetime',
             'phone_verified_at' => 'datetime',
             'email_verified_at' => 'datetime',
         ];

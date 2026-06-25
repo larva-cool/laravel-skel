@@ -68,7 +68,11 @@ use Illuminate\Support\Str;
  * @property string $password 密码哈希
  * @property string $pay_password 支付密码哈希
  * @property string $remember_token 记住我 Token
+ * @property int $login_count 登录次数
+ * @property string $last_login_ip 最后登录IP
  * @property Carbon|null $vip_expires_at VIP过期时间
+ * @property Carbon|null $last_active_at 最后活动
+ * @property Carbon|null $last_login_at 最后登录
  * @property Carbon $created_at 注册时间
  * @property Carbon $updated_at 最后更新时间
  * @property Carbon|null $deleted_at 删除时间
@@ -106,9 +110,6 @@ class User extends Authenticatable
     use Traits\DateTimeFormatter;
     use Traits\HasApiTokens;
 
-    // 默认头像
-    public const DEFAULT_AVATAR = 'img/avatar.png';
-
     /**
      * The table associated with the model.
      *
@@ -123,7 +124,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'group_id', 'username', 'email', 'phone', 'name', 'avatar', 'status', 'available_points', 'available_coins',
-        'socket_id', 'device_id', 'password', 'vip_expires_at',
+        'socket_id', 'device_id', 'password', 'login_count', 'vip_expires_at', 'last_active_at', 'last_login_at', 'last_login_ip'
     ];
 
     /**
@@ -169,7 +170,11 @@ class User extends Authenticatable
             'socket_id' => 'string',
             'password' => 'hashed',
             'pay_password' => 'hashed',
+            'login_count' => 'integer',
+            'last_login_ip' => 'string',
             'vip_expires_at' => 'datetime',
+            'last_active_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -516,10 +521,8 @@ class User extends Authenticatable
      */
     public function refreshLastActiveAt(): void
     {
-        $this->loadMissing('extra');
-
-        if (empty($this->extra->last_active_at) || $this->extra->last_active_at->lt(Carbon::now()->subMinutes(5))) {
-            $this->extra->updateQuietly(['last_active_at' => Carbon::now()]);
+        if (empty($this->last_active_at) || $this->last_active_at->lt(Carbon::now()->subMinutes(5))) {
+            $this->updateQuietly(['last_active_at' => Carbon::now()]);
         }
         // 首次活动时间
         $this->refreshFirstActiveAt();
@@ -591,7 +594,7 @@ class User extends Authenticatable
     /**
      * 重置用户支付密码
      */
-    public function modifyPayPassword(string $password): void
+    public function resetPayPassword(string $password): void
     {
         $this->pay_password = $password;
         $this->saveQuietly();
