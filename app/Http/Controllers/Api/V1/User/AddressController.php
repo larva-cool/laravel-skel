@@ -73,6 +73,16 @@ class AddressController extends Controller
     }
 
     /**
+     * 设为默认地址
+     */
+    public function setDefault(Address $address): AddressResource
+    {
+        $address->markDefault();
+
+        return new AddressResource($address);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Address $address): Response

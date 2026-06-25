@@ -51,7 +51,11 @@ class UserTest extends TestCase
             'device_id',
             'socket_id',
             'password',
+            'login_count',
             'vip_expires_at',
+            'last_active_at',
+            'last_login_at',
+            'last_login_ip',
         ], $fillable);
     }
 
@@ -76,7 +80,11 @@ class UserTest extends TestCase
             'socket_id' => 'string',
             'password' => 'hashed',
             'pay_password' => 'hashed',
+            'login_count' => 'integer',
+            'last_login_ip' => 'string',
             'vip_expires_at' => 'datetime',
+            'last_active_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -189,37 +197,36 @@ class UserTest extends TestCase
     #[TestDox('测试用户关键词搜索作用域')]
     public function test_keyword_scope()
     {
-        $uCount = User::query()->count();
         $user1 = User::factory()->create([
-            'username' => 'test_user',
-            'name' => '测试用户',
-            'email' => 'test@example.com',
-            'phone' => '13812345678',
+            'username' => 'demo_user',
+            'name' => '演示用户',
+            'email' => 'demo@example.com',
+            'phone' => '15812345678',
         ]);
         $user2 = User::factory()->create([
-            'username' => 'other_user',
-            'name' => '其他用户',
-            'email' => 'other@example.com',
-            'phone' => '13987654321',
+            'username' => 'sample_user',
+            'name' => '示例用户',
+            'email' => 'sample@example.com',
+            'phone' => '15987654321',
         ]);
 
         // 测试用户名搜索
-        $results = User::keyword('test')->get();
+        $results = User::keyword('demo')->get();
         $this->assertCount(1, $results);
         $this->assertEquals($user1->id, $results->first()->id);
 
         // 测试昵称搜索
-        $results = User::keyword('测试')->get();
-        $this->assertCount($uCount, $results);
-        $this->assertEquals($user1->id, $results->last()->id);
+        $results = User::keyword('演示')->get();
+        $this->assertCount(1, $results);
+        $this->assertEquals($user1->id, $results->first()->id);
 
         // 测试邮箱搜索
-        $results = User::keyword('test@')->get();
+        $results = User::keyword('demo@')->get();
         $this->assertCount(1, $results);
-        $this->assertEquals($user1->id, $results->last()->id);
+        $this->assertEquals($user1->id, $results->first()->id);
 
         // 测试手机号搜索
-        $results = User::keyword('138')->get();
+        $results = User::keyword('158')->get();
         $this->assertCount(1, $results);
         $this->assertEquals($user1->id, $results->first()->id);
 

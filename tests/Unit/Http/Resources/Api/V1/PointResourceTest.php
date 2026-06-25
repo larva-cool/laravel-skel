@@ -34,7 +34,7 @@ class PointResourceTest extends TestCase
         $this->user = User::create([
             'username' => 'testuser',
             'email' => 'test@example.com',
-            'phone' => '13800138000',
+            'phone' => '13811138000',
             'password' => bcrypt('password'),
         ]);
     }

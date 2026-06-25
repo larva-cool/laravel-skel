@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 use App\Services\SettingManagerService;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Jenssegers\Agent\Agent;
 use Laravel\Telescope\Telescope;
@@ -45,6 +47,17 @@ if (! function_exists('get_morph_maps')) {
         }
 
         return $maps;
+    }
+}
+
+/**
+ * 获取源类型
+ */
+if (!function_exists('source_types')) {
+    function source_types(): array
+    {
+        $maps = Relation::morphMap();
+        return array_keys($maps);
     }
 }
 

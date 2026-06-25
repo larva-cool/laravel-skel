@@ -18,8 +18,8 @@ use App\Models\System\Area;
 use App\Models\System\Dict;
 use App\Services\MailCaptchaService;
 use App\Services\SmsCaptchaService;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * 公共接口
@@ -97,7 +97,7 @@ class CommonController extends Controller
     /**
      * 字典接口
      */
-    public function dict(DictRequest $request)
+    public function dict(DictRequest $request): AnonymousResourceCollection
     {
         $options = Dict::getOptions($request->type);
 
@@ -128,8 +128,6 @@ class CommonController extends Controller
      */
     public function sourceTypes(): JsonResponse
     {
-        $maps = Relation::morphMap();
-
-        return response()->json(array_keys($maps));
+        return response()->json(source_types());
     }
 }
