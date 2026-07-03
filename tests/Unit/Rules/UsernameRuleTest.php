@@ -101,6 +101,14 @@ class UsernameRuleTest extends TestCase
             $failCalled = false;
             $fail = function () use (&$failCalled) {
                 $failCalled = true;
+
+                return new class
+                {
+                    public function translate(): string
+                    {
+                        return '';
+                    }
+                };
             };
 
             $rule->validate('username', $username, $fail);
@@ -130,6 +138,14 @@ class UsernameRuleTest extends TestCase
             $failCalled = false;
             $fail = function () use (&$failCalled) {
                 $failCalled = true;
+
+                return new class
+                {
+                    public function translate(): string
+                    {
+                        return '';
+                    }
+                };
             };
 
             $rule->validate('username', $input, $fail);

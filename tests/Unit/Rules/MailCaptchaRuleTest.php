@@ -134,10 +134,18 @@ class MailCaptchaRuleTest extends TestCase
         ];
         $rule->setData($testData);
 
-        // 模拟 fail 回调
+        // 模拟 fail 回调（返回 PotentiallyTranslatedString 以支持 translate() 调用）
         $failCalled = false;
         $failCallback = function () use (&$failCalled) {
             $failCalled = true;
+
+            return new class
+            {
+                public function translate(): string
+                {
+                    return '';
+                }
+            };
         };
 
         // 验证失败的情况（使用测试环境的固定验证码）

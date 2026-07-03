@@ -111,6 +111,14 @@ class PhoneRuleTest extends TestCase
             $failCalled = false;
             $fail = function () use (&$failCalled) {
                 $failCalled = true;
+
+                return new class
+                {
+                    public function translate(): string
+                    {
+                        return '';
+                    }
+                };
             };
 
             $rule->validate('phone', $phone, $fail);
@@ -140,6 +148,14 @@ class PhoneRuleTest extends TestCase
             $failCalled = false;
             $fail = function () use (&$failCalled) {
                 $failCalled = true;
+
+                return new class
+                {
+                    public function translate(): string
+                    {
+                        return '';
+                    }
+                };
             };
 
             $rule->validate('phone', $input, $fail);

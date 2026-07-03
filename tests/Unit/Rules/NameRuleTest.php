@@ -78,6 +78,14 @@ class NameRuleTest extends TestCase
             $failCalled = false;
             $fail = function () use (&$failCalled) {
                 $failCalled = true;
+
+                return new class
+                {
+                    public function translate(): string
+                    {
+                        return '';
+                    }
+                };
             };
 
             $rule->validate('name', $input, $fail);
@@ -107,6 +115,14 @@ class NameRuleTest extends TestCase
             $failCalled = false;
             $fail = function () use (&$failCalled) {
                 $failCalled = true;
+
+                return new class
+                {
+                    public function translate(): string
+                    {
+                        return '';
+                    }
+                };
             };
 
             $rule->validate('name', $input, $fail);
