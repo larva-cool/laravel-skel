@@ -47,15 +47,13 @@ class AgreementResourceTest extends TestCase
         // 获取资源数组
         $result = $resource->toArray($request);
 
-        // 验证数组结构
-        $this->assertArrayHasKey('id', $result);
+        // 验证数组结构（与 AgreementResource 实际输出一致）
         $this->assertArrayHasKey('title', $result);
         $this->assertArrayHasKey('content', $result);
-        $this->assertArrayHasKey('created_at', $result);
         $this->assertArrayHasKey('updated_at', $result);
 
         // 验证字段数量
-        $this->assertCount(5, $result);
+        $this->assertCount(3, $result);
     }
 
     #[Test]
@@ -63,10 +61,8 @@ class AgreementResourceTest extends TestCase
     public function test_date_format()
     {
         // 创建带特定日期的测试数据
-        $createdAt = Carbon::now();
         $updatedAt = Carbon::now()->addHours(1);
         $agreement = $this->createAgreement([
-            'created_at' => $createdAt,
             'updated_at' => $updatedAt,
         ]);
 
@@ -79,8 +75,7 @@ class AgreementResourceTest extends TestCase
         // 获取资源数组
         $result = $resource->toArray($request);
 
-        // 验证日期格式
-        $this->assertEquals($createdAt->toDateTimeString(), $result['created_at']);
+        // 验证日期格式（AgreementResource 只输出 updated_at）
         $this->assertEquals($updatedAt->toDateTimeString(), $result['updated_at']);
     }
 
@@ -90,7 +85,6 @@ class AgreementResourceTest extends TestCase
     {
         // 创建测试数据
         $agreement = $this->createAgreement([
-            'created_at' => null,
             'updated_at' => null,
         ]);
 
@@ -103,8 +97,7 @@ class AgreementResourceTest extends TestCase
         // 获取资源数组
         $result = $resource->toArray($request);
 
-        // 验证null日期处理
-        $this->assertNull($result['created_at']);
+        // 验证null日期处理（AgreementResource 只输出 updated_at）
         $this->assertNull($result['updated_at']);
     }
 
@@ -114,7 +107,6 @@ class AgreementResourceTest extends TestCase
     {
         // 创建带特定字段值的测试数据
         $testData = [
-            'id' => 123,
             'title' => '用户协议',
             'content' => '这是用户协议的详细内容',
         ];
@@ -130,8 +122,7 @@ class AgreementResourceTest extends TestCase
         // 获取资源数组
         $result = $resource->toArray($request);
 
-        // 验证字段值映射
-        $this->assertEquals($testData['id'], $result['id']);
+        // 验证字段值映射（AgreementResource 只输出 title, content, updated_at）
         $this->assertEquals($testData['title'], $result['title']);
         $this->assertEquals($testData['content'], $result['content']);
     }
