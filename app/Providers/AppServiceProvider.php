@@ -10,10 +10,12 @@ namespace App\Providers;
 
 use App\Models\PersonalAccessToken;
 use App\Services\SettingManagerService;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 
@@ -34,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             return new SettingManagerService;
         });
         // telescope 配置
-        if (class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
@@ -50,5 +52,10 @@ class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict(! $this->app->isProduction());
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         Relation::enforceMorphMap(config('morph_maps'));
+
+        // 定义 API 速率限制器
+        RateLimiter::for('api', function (object $request) {
+            return Limit::perMinute(60);
+        });
     }
 }
