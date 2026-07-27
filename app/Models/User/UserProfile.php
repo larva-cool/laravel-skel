@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Models\User;
 
-use App\Enum\Gender;
+use App\Enums\Gender;
 use App\Models\Model;
 use App\Models\System\Area;
 use App\Models\User;
@@ -171,7 +171,7 @@ class UserProfile extends Model
     protected function genderLabel(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, $attributes) => $this->gender->label()
+            get: fn (mixed $value, $attributes) => $this->gender?->label()
         )->shouldCache();
     }
 }

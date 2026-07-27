@@ -1,9 +1,16 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "larva/laravel-skel",
+    "name": "larva/laravel-skel-pro",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework", "kit", "skel", "skeleton", "api"],
+    "keywords": [
+        "laravel",
+        "framework",
+        "kit",
+        "skel",
+        "skeleton",
+        "api"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -11,14 +18,18 @@
         "intervention/image-laravel": "^1.5",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^12.0",
+        "laravel/horizon": "^5.46",
         "laravel/octane": "^2.15",
         "laravel/pulse": "^1.7",
         "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.0",
+        "laravel/scout": "^11.1",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.0",
+        "maatwebsite/excel": "^3.1",
         "overtrue/easy-sms": "^3.2",
         "predis/predis": "^3.4",
+        "spatie/laravel-permission": "^6.25",
         "zhuzhichao/ip-location-zh": "^2.4"
     },
     "require-dev": {
@@ -27,7 +38,7 @@
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.29",
         "laravel/sail": "^1.41",
-        "laravel/telescope": "^5.18",
+        "laravel/telescope": "^5.20",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "phpunit/phpunit": "^11.5.55"

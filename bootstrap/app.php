@@ -8,6 +8,7 @@ declare(strict_types=1);
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Route;
 use Psr\Log\LogLevel;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -20,14 +21,23 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
+        then: function () {
+            Route::middleware('web')
+                ->prefix('admin')
+                ->as('admin.')
+                ->group(base_path('routes/admin.php'));
+        },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
         // $middleware->authenticateSessions();
-        // $middleware->throttleWithRedis();
+        $middleware->throttleApi(redis: false);
         $middleware->alias([
             'abilities' => Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
             'ability' => Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,//角色
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,//权限
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,//角色权限
         ]);
         $middleware->web(append: [
             \App\Http\Middleware\RefreshUserActiveAt::class,
@@ -37,6 +47,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         // Configure the CSRF token validation middleware.
         $middleware->validateCsrfTokens([
+            '/admin/*',
             '/api/*',
         ]);
         // Configure the cookie encryption middleware.

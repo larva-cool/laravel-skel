@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace App\Models\Content;
 
 use App\Casts\AsJson;
-use App\Enum\ReviewStatus;
+use App\Enums\ReviewStatus;
 use App\Models\Model;
 use App\Models\Traits;
 use App\Models\User;
@@ -82,7 +82,7 @@ class Comment extends Model
      * @var array
      */
     protected $attributes = [
-        'status' => ReviewStatus::PENDING->value,
+        'status' => ReviewStatus::PENDING,
     ];
 
     /**
@@ -162,7 +162,7 @@ class Comment extends Model
     {
         if (! $this->status->isApproved()) {
             foreach ($this->mentioned_users as $userId) {
-                $user = User::find($userId);
+                $user = User::query()->where('id', $userId)->first();
                 $user?->notify(new MentionedInComment($this));
             }
             $this->status = ReviewStatus::APPROVED;

@@ -6,12 +6,13 @@ WORKDIR /app
 
 COPY . /app
 
-RUN mv .env.${ENV} /app/.env && \
-    composer install --prefer-dist --no-progress --optimize-autoloader
+RUN mv .env.${ENV} /app/.env \
+    && composer install --prefer-dist --no-progress --optimize-autoloader
 
-RUN php artisan octane:start --server=frankenphp --force --silent
+RUN php artisan octane:install --server=frankenphp --force --silent
 
-VOLUME [ "/app/runtime/logs" ]
+VOLUME [ "/app/storage/app" ]
+VOLUME [ "/app/storage/logs" ]
 
 EXPOSE 8787/tcp
 
